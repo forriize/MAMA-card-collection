@@ -1350,8 +1350,9 @@ async function downloadCertificate() {
     const fileName = `we-vote-riize-stamps-${currentAccount}.png`;
 
     // มือถือ: เปิดเมนูแชร์เพื่อให้เลือก Save Image / บันทึกรูปภาพ
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    // ใช้เมนู Save Image เฉพาะมือถือจริง ๆ เท่านั้น
+    // ไม่ใช้ MacIntel/maxTouchPoints เพราะอาจตรวจคอม Mac เป็นมือถือแล้วเปิด Share Sheet
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     if (isMobile && navigator.share && navigator.canShare) {
       const file = new File([blob], fileName, { type: "image/png" });
       if (navigator.canShare({ files: [file] })) {
