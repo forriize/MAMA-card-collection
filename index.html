@@ -1349,36 +1349,31 @@ async function downloadCertificate() {
     const blob = await new Promise((resolve, reject) => canvas.toBlob(b => b ? resolve(b) : reject(new Error("สร้างรูป PNG ไม่สำเร็จ")), "image/png"));
     const fileName = `we-vote-riize-stamps-${currentAccount}.png`;
 
-    // มือถือที่รองรับ: เปิดเมนูแชร์ของระบบ ซึ่งมีตัวเลือก Save Image / บันทึกรูปภาพ
-    if (navigator.share && navigator.canShare) {
+    // มือถือ: เปิดเมนูแชร์เพื่อให้เลือก Save Image / บันทึกรูปภาพ
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    if (isMobile && navigator.share && navigator.canShare) {
       const file = new File([blob], fileName, { type: "image/png" });
       if (navigator.canShare({ files: [file] })) {
-        if (imageWindow && !imageWindow.closed) imageWindow.close();
         await navigator.share({ files: [file], title: "My RIIZE Stamp Collection" });
         showStatus("accountStatus", "เปิดเมนูแชร์แล้ว เลือก Save Image / บันทึกรูปภาพได้เลย", "ok");
         return;
       }
     }
 
-    // อุปกรณ์ที่ไม่มีเมนูแชร์ไฟล์: แสดงรูปให้เห็นแน่นอน แล้วให้ผู้ใช้บันทึกจากรูป
+    // คอม: ดาวน์โหลด PNG เป็นไฟล์ธรรมดาโดยตรง ไม่เปิดแท็บหรือ overlay
     const objectUrl = URL.createObjectURL(blob);
-    if (imageWindow && !imageWindow.closed) {
-      imageWindow.document.open();
-      imageWindow.document.write(`<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>My RIIZE Stamp Collection</title><style>html,body{margin:0;background:#fff8ee;font-family:system-ui}body{padding:12px;box-sizing:border-box}img{display:block;width:100%;height:auto;max-width:1200px;margin:0 auto}p{text-align:center;color:#70472f;font-size:14px}</style></head><body><p>กดค้างที่รูป แล้วเลือก Save Image / บันทึกรูปภาพ</p><img id="stampImage" alt="My RIIZE Stamp Collection"><script>document.getElementById('stampImage').src=${JSON.stringify(objectUrl)};<\/script></body></html>`);
-      imageWindow.document.close();
-    } else {
-      // Popup อาจถูกบล็อก: แสดงรูปในหน้าปัจจุบันแทน เพื่อไม่ให้กดแล้วเงียบ
-      const overlay = document.createElement("div");
-      overlay.style.cssText = "position:fixed;inset:0;z-index:999999;background:#fff8ee;overflow:auto;padding:16px;box-sizing:border-box;";
-      const close = document.createElement("button");
-      close.type = "button"; close.textContent = "ปิด ✕";
-      close.style.cssText = "display:block;margin:0 auto 12px;padding:10px 18px;border:0;border-radius:999px;background:#d96626;color:white;font-size:16px;";
-      close.onclick = () => { overlay.remove(); URL.revokeObjectURL(objectUrl); };
-      const note = document.createElement("p"); note.textContent = "กดค้างที่รูป แล้วเลือก Save Image / บันทึกรูปภาพ"; note.style.cssText = "text-align:center;color:#70472f;";
-      const img = document.createElement("img"); img.src = objectUrl; img.alt = "My RIIZE Stamp Collection"; img.style.cssText = "display:block;width:100%;height:auto;max-width:1200px;margin:0 auto;";
-      overlay.append(close, note, img); document.body.appendChild(overlay);
-    }
-    showStatus("accountStatus", "แสดงรูปใบสะสมแล้ว กดค้างที่รูปเพื่อบันทึกลงรูปภาพได้เลย", "ok");
+    const link = document.createElement("a");
+    link.href = objectUrl;
+    link.download = fileName;
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 30000);
+    showStatus("accountStatus", isMobile
+      ? "เริ่มดาวน์โหลดรูป PNG แล้ว หากต้องการบันทึกลงรูปภาพให้เปิดไฟล์แล้วเลือกแชร์"
+      : "กำลังดาวน์โหลดใบสะสมเป็นไฟล์ PNG", "ok");
   } catch (error) {
     if (imageWindow && !imageWindow.closed) imageWindow.close();
     console.error("Certificate image error:", error);
