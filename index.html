@@ -1254,226 +1254,132 @@ async function checkTargetPhotoFast(uploadedImage) {
 
 async function downloadCertificate() {
   if (!currentAccount) {
-    showStatus(
-      "accountStatus",
-      "กรุณากรอกแอคแล้วกดดูคอลเลกชันก่อนดาวน์โหลด",
-      "err"
-    );
+    showStatus("accountStatus", "กรุณากรอกแอคแล้วกดดูคอลเลกชันก่อนบันทึกรูป", "err");
     return;
   }
 
-  try {
-    const rec = accountRecord();
-    const earned = new Set(rec.stamps || []);
+  // เปิดหน้าต่างไว้ทันทีจากการแตะปุ่ม เพื่อไม่ให้ browser บล็อก popup หลัง await
+  let imageWindow = null;
+  try { imageWindow = window.open("about:blank", "_blank"); } catch (_) {}
 
-    // โหลดภาพล่วงหน้า ป้องกันวาดภาพที่ยังไม่พร้อม
+  try {
+    // ดึงข้อมูลล่าสุดจาก Supabase แทน local cache เพื่อให้สแตมป์ในรูปตรงกับหน้าเว็บ
+    const rec = await accountRecordFor(currentAccount);
+    const earned = new Set(rec.stamps || []);
     const loadedImages = {};
 
-    await Promise.all(
-      DAYS.map(async (d) => {
-        if (!d.image || !earned.has(dateForDay(d.day))) return;
-
-        try {
-          const img = new Image();
-          img.crossOrigin = "anonymous";
-
-          await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-            img.src = ASSETS[d.image];
-
-            if (img.complete && img.naturalWidth > 0) {
-              resolve();
-            }
-          });
-
-          loadedImages[d.image] = img;
-        } catch (error) {
-          console.warn("โหลดภาพสแตมป์ไม่สำเร็จ:", d.image, error);
-        }
-      })
-    );
+    await Promise.all(DAYS.map(async (d) => {
+      if (!d.image || !earned.has(dateForDay(d.day))) return;
+      try {
+        const img = new Image();
+        // ภาพอยู่ในโฟลเดอร์ images ของเว็บเดียวกัน จึงใช้ URL จริงจากตำแหน่งหน้าเว็บ
+        img.src = new URL(d.image, document.baseURI).href;
+        await new Promise((resolve, reject) => {
+          if (img.complete && img.naturalWidth > 0) return resolve();
+          img.onload = resolve;
+          img.onerror = () => reject(new Error("โหลดภาพไม่สำเร็จ: " + img.src));
+        });
+        loadedImages[d.image] = img;
+      } catch (error) {
+        console.warn("โหลดภาพสแตมป์ไม่สำเร็จ:", d.image, error);
+      }
+    }));
 
     const canvas = document.createElement("canvas");
     canvas.width = 1200;
     canvas.height = 1500;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("ไม่สามารถสร้าง Canvas ได้");
 
-    // bg
     const bg = ctx.createLinearGradient(0, 0, 1200, 1500);
-    bg.addColorStop(0, "#fff8ee");
-    bg.addColorStop(0.5, "#ffe8d1");
-    bg.addColorStop(1, "#fff0e6");
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, 1200, 1500);
+    bg.addColorStop(0, "#fff8ee"); bg.addColorStop(0.5, "#ffe8d1"); bg.addColorStop(1, "#fff0e6");
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, 1200, 1500);
+    ctx.strokeStyle = "#f5b77c"; ctx.lineWidth = 8;
+    ctx.beginPath(); ctx.roundRect(30, 30, 1140, 1440, 42); ctx.stroke();
 
-    // กรอบใบสะสม
-    ctx.strokeStyle = "#f5b77c";
-    ctx.lineWidth = 8;
-    ctx.beginPath();
-    ctx.roundRect(30, 30, 1140, 1440, 42);
-    ctx.stroke();
-
-    // head
     ctx.textAlign = "center";
-    ctx.fillStyle = "#e97832";
-    ctx.font = "bold 30px system-ui";
+    ctx.fillStyle = "#e97832"; ctx.font = "bold 30px system-ui";
     ctx.fillText("✦ MY STAMP COLLECTION ✦", 600, 95);
-
-    ctx.fillStyle = "#402c24";
-    ctx.font = "900 54px system-ui";
+    ctx.fillStyle = "#402c24"; ctx.font = "900 54px system-ui";
     ctx.fillText("2026 MAMA FAN’S CHOICE", 600, 165);
-
-    // acc
-    ctx.fillStyle = "#fffdf8";
-    ctx.beginPath();
-    ctx.roundRect(250, 190, 700, 85, 28);
-    ctx.fill();
-
-    ctx.strokeStyle = "#f3b27b";
-    ctx.lineWidth = 3;
-    ctx.stroke();
+    ctx.fillStyle = "#fffdf8"; ctx.beginPath(); ctx.roundRect(250, 190, 700, 85, 28); ctx.fill();
+    ctx.strokeStyle = "#f3b27b"; ctx.lineWidth = 3; ctx.stroke();
 
     const accountName = "@" + currentAccount;
-    let accountFontSize = 42;
-    ctx.font = `bold ${accountFontSize}px system-ui`;
-
-    while (
-      ctx.measureText(accountName).width > 640 &&
-      accountFontSize > 20
-    ) {
-      accountFontSize -= 2;
-      ctx.font = `bold ${accountFontSize}px system-ui`;
+    let accountFontSize = 42; ctx.font = `bold ${accountFontSize}px system-ui`;
+    while (ctx.measureText(accountName).width > 640 && accountFontSize > 20) {
+      accountFontSize -= 2; ctx.font = `bold ${accountFontSize}px system-ui`;
     }
+    ctx.fillStyle = "#d96626"; ctx.fillText(accountName, 600, 245);
+    ctx.fillStyle = "#9c5734"; ctx.font = "bold 26px system-ui";
+    ctx.fillText(`♡ ${earned.size} / ${DAYS.length} STAMPS COLLECTED ♡`, 600, 320);
 
-    ctx.fillStyle = "#d96626";
-    ctx.fillText(accountName, 600, 245);
-
-    // จำนวนสแตมป์
-    ctx.fillStyle = "#9c5734";
-    ctx.font = "bold 26px system-ui";
-    ctx.fillText(
-      `♡ ${earned.size} / ${DAYS.length} STAMPS COLLECTED ♡`,
-      600,
-      320
-    );
-
-    const cols = 4;
-    const cellW = 250;
-    const cellH = 300;
-    const startX = 100;
-    const startY = 365;
-
+    const cols = 4, cellW = 250, cellH = 300, startX = 100, startY = 365;
     DAYS.forEach((d, i) => {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      const cx = startX + col * cellW + cellW / 2;
-      const cy = startY + row * cellH + 85;
+      const col = i % cols, row = Math.floor(i / cols);
+      const cx = startX + col * cellW + cellW / 2, cy = startY + row * cellH + 85;
       const isEarned = earned.has(dateForDay(d.day));
-
-      ctx.save();
-
-      // พื้นหลังสแตมป์
-      ctx.beginPath();
-      ctx.arc(cx, cy, 82, 0, Math.PI * 2);
-      ctx.fillStyle = isEarned
-        ? ["#ffd9b5", "#ffe9ad", "#ffd9ce", "#ffe7c7"][i % 4]
-        : "#f3eee8";
-      ctx.fill();
-
-      ctx.lineWidth = 5;
-      ctx.strokeStyle = "#fffdf8";
-      ctx.stroke();
+      ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, 82, 0, Math.PI * 2);
+      ctx.fillStyle = isEarned ? ["#ffd9b5", "#ffe9ad", "#ffd9ce", "#ffe7c7"][i % 4] : "#f3eee8";
+      ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = "#fffdf8"; ctx.stroke();
 
       if (isEarned && d.image && loadedImages[d.image]) {
         const img = loadedImages[d.image];
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(cx, cy, 72, 0, Math.PI * 2);
-        ctx.clip();
-
-        const size = 144;
-        const scale = Math.min(
-          size / img.naturalWidth,
-          size / img.naturalHeight
-        );
-        const w = img.naturalWidth * scale;
-        const h = img.naturalHeight * scale;
-
-        ctx.drawImage(img, cx - w / 2, cy - h / 2, w, h);
-        ctx.restore();
+        ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, 72, 0, Math.PI * 2); ctx.clip();
+        const size = 144, scale = Math.max(size / img.naturalWidth, size / img.naturalHeight);
+        const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
+        ctx.drawImage(img, cx - w / 2, cy - h / 2, w, h); ctx.restore();
       } else if (isEarned) {
-        ctx.fillStyle = "#c9682b";
-        ctx.font = "bold 64px Georgia";
-        ctx.fillText(d.letter || "♥", cx, cy + 22);
+        ctx.fillStyle = "#c9682b"; ctx.font = "bold 64px Georgia"; ctx.fillText(d.letter || "♥", cx, cy + 22);
       } else {
-        ctx.fillStyle = "#c8bcb2";
-        ctx.font = "bold 38px system-ui";
-        ctx.fillText("♡", cx, cy + 13);
+        ctx.fillStyle = "#c8bcb2"; ctx.font = "bold 38px system-ui"; ctx.fillText("♡", cx, cy + 13);
       }
-
       ctx.restore();
-
-      ctx.fillStyle = "#543a2d";
-      ctx.font = "bold 24px system-ui";
-      ctx.fillText(`${d.day}/10`, cx, cy + 120);
-
-      ctx.fillStyle = isEarned ? "#d96626" : "#a79a90";
-      ctx.font = "bold 15px system-ui";
-      ctx.fillText(
-        isEarned ? "♥ COLLECTED" : "NOT YET",
-        cx,
-        cy + 148
-      );
+      ctx.fillStyle = "#543a2d"; ctx.font = "bold 24px system-ui"; ctx.fillText(`${d.day}/10`, cx, cy + 120);
+      ctx.fillStyle = isEarned ? "#d96626" : "#a79a90"; ctx.font = "bold 15px system-ui";
+      ctx.fillText(isEarned ? "♥ COLLECTED" : "NOT YET", cx, cy + 148);
     });
 
+    ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillStyle = "#a46a47"; ctx.font = "bold 22px system-ui";
+    ctx.fillText("Round 1: 2026.10.12 19:00 - 10.22 23:59 (KST)", canvas.width / 2, 1400);
+    ctx.fillStyle = "#402c24"; ctx.font = "bold 18px system-ui";
+    ctx.fillText("WE VOTE RIIZE · 2026 MAMA FAN’S CHOICE", canvas.width / 2, 1435); ctx.restore();
 
-    ctx.save();
+    const blob = await new Promise((resolve, reject) => canvas.toBlob(b => b ? resolve(b) : reject(new Error("สร้างรูป PNG ไม่สำเร็จ")), "image/png"));
+    const fileName = `we-vote-riize-stamps-${currentAccount}.png`;
 
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "#a46a47";
-    ctx.font = "bold 22px system-ui";
+    // มือถือที่รองรับ: เปิดเมนูแชร์ของระบบ ซึ่งมีตัวเลือก Save Image / บันทึกรูปภาพ
+    if (navigator.share && navigator.canShare) {
+      const file = new File([blob], fileName, { type: "image/png" });
+      if (navigator.canShare({ files: [file] })) {
+        if (imageWindow && !imageWindow.closed) imageWindow.close();
+        await navigator.share({ files: [file], title: "My RIIZE Stamp Collection" });
+        showStatus("accountStatus", "เปิดเมนูแชร์แล้ว เลือก Save Image / บันทึกรูปภาพได้เลย", "ok");
+        return;
+      }
+    }
 
-    ctx.fillText(
-    "Round 1: 2026.10.12 19:00 - 10.22 23:59 (KST)",
-    canvas.width / 2,
-    1400
-    );
-
-    ctx.fillStyle = "#402c24";
-    ctx.font = "bold 18px system-ui";
-
-    ctx.fillText(
-    "WE VOTE RIIZE · 2026 MAMA FAN’S CHOICE",
-    canvas.width / 2,
-    1435
-    );
-
-    ctx.restore();
-
-    // PNG
-    const dataUrl = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.download = `we-vote-riize-stamps-${currentAccount}.png`;
-    link.href = dataUrl;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
+    // อุปกรณ์ที่ไม่มีเมนูแชร์ไฟล์: แสดงรูปเต็มขนาดแทนการดาวน์โหลด
+    const objectUrl = URL.createObjectURL(blob);
+    if (imageWindow && !imageWindow.closed) {
+      imageWindow.document.title = "My RIIZE Stamp Collection";
+      imageWindow.document.body.style.cssText = "margin:0;background:#fff8ee;display:flex;justify-content:center;align-items:flex-start;";
+      const img = imageWindow.document.createElement("img");
+      img.src = objectUrl; img.alt = "My RIIZE Stamp Collection";
+      img.style.cssText = "display:block;width:100%;height:auto;max-width:1200px;";
+      imageWindow.document.body.appendChild(img);
+    } else {
+      const link = document.createElement("a"); link.href = objectUrl; link.target = "_blank"; link.rel = "noopener";
+      link.click();
+    }
+    showStatus("accountStatus", "เปิดรูปใบสะสมแล้ว กดค้างที่รูปเพื่อบันทึกลงรูปภาพได้เลย", "ok");
   } catch (error) {
-    console.error("Certificate download error:", error);
-    showStatus(
-      "accountStatus",
-      "ดาวน์โหลดใบสะสมไม่สำเร็จ กรุณาลองอีกครั้ง",
-      "err"
-    );
+    if (imageWindow && !imageWindow.closed) imageWindow.close();
+    console.error("Certificate image error:", error);
+    showStatus("accountStatus", error.name === "AbortError" ? "ยกเลิกการบันทึกรูปแล้ว" : "สร้างรูปไม่สำเร็จ กรุณาลองอีกครั้ง และตรวจว่าไฟล์ images/day17.png ถึง day22.png อยู่บน GitHub Pages ครบ", "err");
   }
 }
-
 $("downloadBtn").addEventListener("click",downloadCertificate);
 $("clearInputBtn").addEventListener("click",()=>{$("proof").value="";hideStatus("uploadStatus")});
 setupDates();
