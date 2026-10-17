@@ -1360,20 +1360,25 @@ async function downloadCertificate() {
       }
     }
 
-    // อุปกรณ์ที่ไม่มีเมนูแชร์ไฟล์: แสดงรูปเต็มขนาดแทนการดาวน์โหลด
+    // อุปกรณ์ที่ไม่มีเมนูแชร์ไฟล์: แสดงรูปให้เห็นแน่นอน แล้วให้ผู้ใช้บันทึกจากรูป
     const objectUrl = URL.createObjectURL(blob);
     if (imageWindow && !imageWindow.closed) {
-      imageWindow.document.title = "My RIIZE Stamp Collection";
-      imageWindow.document.body.style.cssText = "margin:0;background:#fff8ee;display:flex;justify-content:center;align-items:flex-start;";
-      const img = imageWindow.document.createElement("img");
-      img.src = objectUrl; img.alt = "My RIIZE Stamp Collection";
-      img.style.cssText = "display:block;width:100%;height:auto;max-width:1200px;";
-      imageWindow.document.body.appendChild(img);
+      imageWindow.document.open();
+      imageWindow.document.write(`<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>My RIIZE Stamp Collection</title><style>html,body{margin:0;background:#fff8ee;font-family:system-ui}body{padding:12px;box-sizing:border-box}img{display:block;width:100%;height:auto;max-width:1200px;margin:0 auto}p{text-align:center;color:#70472f;font-size:14px}</style></head><body><p>กดค้างที่รูป แล้วเลือก Save Image / บันทึกรูปภาพ</p><img id="stampImage" alt="My RIIZE Stamp Collection"><script>document.getElementById('stampImage').src=${JSON.stringify(objectUrl)};<\/script></body></html>`);
+      imageWindow.document.close();
     } else {
-      const link = document.createElement("a"); link.href = objectUrl; link.target = "_blank"; link.rel = "noopener";
-      link.click();
+      // Popup อาจถูกบล็อก: แสดงรูปในหน้าปัจจุบันแทน เพื่อไม่ให้กดแล้วเงียบ
+      const overlay = document.createElement("div");
+      overlay.style.cssText = "position:fixed;inset:0;z-index:999999;background:#fff8ee;overflow:auto;padding:16px;box-sizing:border-box;";
+      const close = document.createElement("button");
+      close.type = "button"; close.textContent = "ปิด ✕";
+      close.style.cssText = "display:block;margin:0 auto 12px;padding:10px 18px;border:0;border-radius:999px;background:#d96626;color:white;font-size:16px;";
+      close.onclick = () => { overlay.remove(); URL.revokeObjectURL(objectUrl); };
+      const note = document.createElement("p"); note.textContent = "กดค้างที่รูป แล้วเลือก Save Image / บันทึกรูปภาพ"; note.style.cssText = "text-align:center;color:#70472f;";
+      const img = document.createElement("img"); img.src = objectUrl; img.alt = "My RIIZE Stamp Collection"; img.style.cssText = "display:block;width:100%;height:auto;max-width:1200px;margin:0 auto;";
+      overlay.append(close, note, img); document.body.appendChild(overlay);
     }
-    showStatus("accountStatus", "เปิดรูปใบสะสมแล้ว กดค้างที่รูปเพื่อบันทึกลงรูปภาพได้เลย", "ok");
+    showStatus("accountStatus", "แสดงรูปใบสะสมแล้ว กดค้างที่รูปเพื่อบันทึกลงรูปภาพได้เลย", "ok");
   } catch (error) {
     if (imageWindow && !imageWindow.closed) imageWindow.close();
     console.error("Certificate image error:", error);
