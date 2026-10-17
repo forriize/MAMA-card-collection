@@ -1258,9 +1258,9 @@ async function downloadCertificate() {
     return;
   }
 
-  // เปิดหน้าต่างไว้ทันทีจากการแตะปุ่ม เพื่อไม่ให้ browser บล็อก popup หลัง await
+  // ไม่เปิดแท็บใหม่ เพราะบางเบราว์เซอร์บนคอมจะบล็อก popup หรือเด้งกลับหน้าเดิม
+  // หากอุปกรณ์ไม่มีเมนูแชร์ จะแสดงรูปในหน้าปัจจุบันแทน
   let imageWindow = null;
-  try { imageWindow = window.open("about:blank", "_blank"); } catch (_) {}
 
   try {
     // ดึงข้อมูลล่าสุดจาก Supabase แทน local cache เพื่อให้สแตมป์ในรูปตรงกับหน้าเว็บ
