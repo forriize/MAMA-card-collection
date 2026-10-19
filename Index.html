@@ -1513,17 +1513,34 @@ function localCardKey(account){return `we_vote_riize_cards_${account}`}
 function localCards(account){try{return JSON.parse(localStorage.getItem(localCardKey(account))||"[]")}catch{return []}}
 function saveLocalCards(account,ids){localStorage.setItem(localCardKey(account),JSON.stringify([...new Set(ids)]))}
 function localCardRecords(account){try{return JSON.parse(localStorage.getItem(`we_vote_riize_card_records_${account}`)||"[]")}catch{return []}}
+function periodLabel(){return `Period ${EVENT_SETTINGS.activePeriod}`}
 async function ownedCardIds(account){
  if(!DB_CONFIGURED)return localCards(account);
- try{const rows=await dbRequest(`card_records?select=card_id&account=eq.${encodeURIComponent(account)}`);return rows.map(r=>r.card_id)}catch(e){return localCards(account)}
+ const rows=await dbRequest(`card_records?select=card_id&account=eq.${encodeURIComponent(account)}`);
+ return rows.map(r=>r.card_id);
 }
 async function saveOwnedCard(account,cardId,day){
- if(!DB_CONFIGURED){const ids=localCards(account);if(!ids.includes(cardId)){ids.push(cardId);saveLocalCards(account,ids)}const records=localCardRecords(account);if(!records.some(r=>r.card_id===cardId)){records.push({card_id:cardId,awarded_date:day});localStorage.setItem(`we_vote_riize_card_records_${account}`,JSON.stringify(records))}return}
- try{await dbRequest("card_records",{method:"POST",headers:{"Prefer":"return=representation"},body:JSON.stringify({account,card_id:cardId,awarded_date:day})})}catch(e){if(!String(e.message).toLowerCase().includes("duplicate")&&!String(e.message).includes("23505"))throw e}
+ const period=periodLabel();
+ if(!DB_CONFIGURED){
+  const ids=localCards(account);if(!ids.includes(cardId)){ids.push(cardId);saveLocalCards(account,ids)}
+  const records=localCardRecords(account);
+  if(!records.some(r=>r.card_id===cardId)){records.push({card_id:cardId,period,created_at:new Date().toISOString()});localStorage.setItem(`we_vote_riize_card_records_${account}`,JSON.stringify(records))}
+  return;
+ }
+ try{
+  await dbRequest("card_records",{method:"POST",body:JSON.stringify({account,card_id:cardId,period})});
+ }catch(e){
+  const message=String(e.message);
+  if(message.includes("23505")||message.toLowerCase().includes("duplicate")||message.toLowerCase().includes("unique"))return;
+  throw e;
+ }
 }
 async function ownedCardRecords(account){
- if(!DB_CONFIGURED){const records=localCardRecords(account);const known=new Set(records.map(r=>r.card_id));return [...records,...localCards(account).filter(id=>!known.has(id)).map(card_id=>({card_id,awarded_date:null}))]}
- try{return await dbRequest(`card_records?select=card_id,awarded_date&account=eq.${encodeURIComponent(account)}&order=awarded_date.asc`)}catch(e){const records=localCardRecords(account);const known=new Set(records.map(r=>r.card_id));return [...records,...localCards(account).filter(id=>!known.has(id)).map(card_id=>({card_id,awarded_date:null}))]}
+ if(!DB_CONFIGURED){
+  const records=localCardRecords(account);const known=new Set(records.map(r=>r.card_id));
+  return [...records,...localCards(account).filter(id=>!known.has(id)).map(card_id=>({card_id,period:null,created_at:null}))];
+ }
+ return await dbRequest(`card_records?select=card_id,period,created_at&account=eq.${encodeURIComponent(account)}&order=created_at.asc`);
 }
 async function drawCard(account,day){
  const owned=await ownedCardIds(account);
@@ -1902,7 +1919,7 @@ async function downloadCertificate() {
     const accountName="@"+currentAccount;let fs=38;ctx.font=`900 ${fs}px system-ui`;while(ctx.measureText(accountName).width>640&&fs>20){fs-=2;ctx.font=`900 ${fs}px system-ui`};ctx.fillStyle="#164e9a";ctx.fillText(accountName,600,239);
     ctx.fillStyle="#333";ctx.font="bold 23px system-ui";ctx.fillText(`LV. ${earned.size}/${DAYS.length}  ·  ${cardRows.length} CARDS COLLECTED`,600,305);
     // List each card with the day it was awarded. Cards from before date tracking are marked as date unknown.
-    const displayRows=[...cardRows].sort((a,b)=>(a.awarded_date||"9999").localeCompare(b.awarded_date||"9999"));
+    const displayRows=[...cardRows].sort((a,b)=>(a.created_at||"9999").localeCompare(b.created_at||"9999"));
     const cols=6, cardW=155, cardH=250, gapX=20, gapY=18, gridW=cols*cardW+(cols-1)*gapX, startX=(1200-gridW)/2, startY=340;
     displayRows.slice(0,24).forEach((r,i)=>{
       const col=i%cols,row=Math.floor(i/cols),x=startX+col*(cardW+gapX),y=startY+row*(cardH+gapY);
@@ -1912,7 +1929,7 @@ async function downloadCertificate() {
       if(img){const pad=5, maxW=cardW-2*pad,maxH=cardH-34,scale=Math.min(maxW/img.naturalWidth,maxH/img.naturalHeight),w=img.naturalWidth*scale,h=img.naturalHeight*scale;ctx.drawImage(img,x+(cardW-w)/2,y+5,w,h)}
       else {ctx.fillStyle="#dbeafe";ctx.fillRect(x+5,y+5,cardW-10,cardH-40);ctx.fillStyle="#164e9a";ctx.font="bold 18px system-ui";ctx.fillText(r.card.name,x+cardW/2,y+cardH/2)}
       ctx.fillStyle="#ffdf4d";ctx.fillRect(x+4,y+cardH-31,cardW-8,26);
-      ctx.fillStyle="#17324d";ctx.font="bold 15px system-ui";ctx.fillText(r.awarded_date?`${Number(r.awarded_date.slice(-2))}/10 · ${r.card.rank}`:`${r.card.rank} · CARD`,x+cardW/2,y+cardH-13);
+      ctx.fillStyle="#17324d";ctx.font="bold 15px system-ui";ctx.fillText(r.period?`${r.period.toUpperCase()} · ${r.card.rank}`:`${r.card.rank} · CARD`,x+cardW/2,y+cardH-13);
     });
     if(!displayRows.length){ctx.fillStyle="#555";ctx.font="bold 26px system-ui";ctx.fillText("ยังไม่มีการ์ดที่ได้รับ",600,650)}
     ctx.fillStyle="#164e9a";ctx.font="bold 18px system-ui";ctx.fillText("DAILY REWARDS · COLLECT THEM ALL!",600,1410);
