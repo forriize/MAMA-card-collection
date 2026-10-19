@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="th">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Rajdhani:wght@400;500;600;700&amp;family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <title>
+   WE VOTE RIIZE · 2026 MAMA Fan’s Choice
+  </title>
+  <style>
+   :root {
+  --ink:#252238;
+  --muted:#77758a;
+  --pink:#ffd6e7;
+  --lilac:#e8ddff;
+  --blue:#d9f1ff;
+  --yellow:#fff0b8;
+  --mint:#d9f5e8;
+  --paper:#fffdfb;
+  --line:#e8e2ef;
+  --hot:#e94e88
+}
+
+* {
+  box-sizing:border-box
+}
+
+body {
+  margin:0;
+  background:radial-gradient(circle at top,#252044 0,#11111b 58%,#0b0b12 100%);
+  color:#f7f4ff;
+  color:var(--ink);
+  font-family:"Rajdhani","Kanit",system-ui,sans-serif
+}
+
+.wrap {
+  max-width:1100px;
+  margin:auto;
+  padding:24px 16px 60px
+}
+
+.hero {
+  text-align:center;
+  padding:24px 12px 18px
+}
+
+.hero h1 {
+  font-size:clamp(28px,6vw,44px);
+  line-height:1.05;
+  margin:10px 0 8px;
+  letter-spacing:.03em
+}
+
+.hero p {
+  margin:0;
+  color:#aaa5c1;
+  font-size:14px
+}
+
+.panel {
+  background:linear-gradient(145deg,#1c1b2b,#171622);
+  border:1px solid #39334e;
+  border-radius:18px;
+  padding:22px;
+  color:#f7f4ff;
+  box-shadow:0 12px 40px #0005;
+  margin:16px 0
+}
+
+.panel h2 {
+  font-size:18px;
+  margin:0 0 14px
+}
+
+.field {
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  margin:12px 0
+}
+
+.field label {
+  font-size:13px;
+  font-weight:750
+}
+
+.field input,.field select {
+  width:100%;
+  padding:13px 14px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:white;
+  color:var(--ink);
+  font:inherit;
+  outline-color:#d9a9ef
+}
+
+.hint {
+  font-size:12px;
+  color:#aaa5c1;
+  line-height:1.55
+}
+
+.actions {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px
+}
+
+.btn {
+  border:0;
+  border-radius:999px;
+  padding:12px 18px;
+  font:inherit;
+  font-size:14px;
+  font-weight:750;
+  cursor:pointer;
+  transition:.15s
+}
+
+.btn:disabled {
+  opacity:.45;
+  cursor:not-allowed
+}
+
+.primary {
+  background:var(--ink);
+  color:white
+}
+
+.secondary {
+  background:#f4eafa;
+  color:#5b3e73
+}
+
+.pinkbtn {
+  background:#ffe1ed;
+  color:#a22c60
+}
+
+.status {
+  display:none;
+  border-radius:13px;
+  padding:12px 14px;
+  margin-top:13px;
+  font-size:13px;
+  line-height:1.5
+}
+
+.status.show {
+  display:block
+}
+
+.status.ok {
+  background:#e6f8ee;
+  color:#17683c
+}
+
+.status.err {
+  background:#fff0f1;
+  color:#9b2c45
+}
+
+.status.info {
+  background:#eef4ff;
+  color:#3d5489
+}
+
+.stamp-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:18px 10px
+}
+
+.stamp-item {
+  text-align:center;
+  min-width:0
+}
+
+.stamp {
+  width:min(100%,138px);
+  aspect-ratio:1;
+  margin:0 auto 8px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  border:4px solid white;
+  box-shadow:0 4px 15px #4b365312;
+  position:relative;
+  background:linear-gradient(135deg,var(--pink),var(--blue))
+}
+
+.stamp:before {
+  content:"";
+  position:absolute;
+  inset:7px;
+  border:1px dashed #ffffffc9;
+  border-radius:50%;
+  pointer-events:none
+}
+
+.stamp.earned {
+  box-shadow:0 0 0 3px #e5c5e0,0 5px 18px #4b365318
+}
+
+.stamp .letter {
+  font-family:Georgia,serif;
+  font-weight:900;
+  font-size:clamp(36px,8vw,64px);
+  color:#51445f;
+  text-shadow:2px 2px #fff8;
+  z-index:1
+}
+
+/* Stamp PNGs: same size and centered in every stamp circle */
+.stamp img {
+  display: block;
+  width: 72%;
+  height: 72%;
+  max-width: 72%;
+  max-height: 72%;
+  object-fit: contain;
+  object-position: center;
+  margin: auto;
+}
+
+.stamp img + .letter {
+  display: none;
+}
+
+.stamp-date {
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:.02em
+}
+
+.stamp-state {
+  font-size:11px;
+  color:#aaa5c1;
+  margin-top:3px
+}
+
+.stamp-item.locked .stamp {
+  filter:grayscale(.4);
+  opacity:.58
+}
+
+.certificate-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap
+}
+
+.count {
+  font-weight:800;
+  font-size:13px;
+  background:#fff1f7;
+  border-radius:999px;
+  padding:8px 12px;
+  color:#a02f62
+}
+
+.empty {
+  padding:24px 10px;
+  text-align:center;
+  color:#aaa5c1;
+  font-size:13px
+}
+
+.foot {
+  text-align:center;
+  color:#9691a4;
+  font-size:11px;
+  margin-top:24px
+}
+
+.small {
+  font-size:12px
+}
+
+.hidden {
+  display:none!important
+}
+
+@media(max-width:520px) {
+  .wrap {
+  padding:12px 12px 40px
+}
+
+.panel {
+  padding:17px;
+  border-radius:20px
+}
+
+.stamp-grid {
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:17px 8px
+}
+
+.stamp {
+  width:min(100%,112px)
+}
+
+.stamp-date {
+  font-size:12px
+}
+
+
+}
+
+body {
+  background:radial-gradient(circle at 8% 8%,#fff7b9 0 5%,transparent 5.5%),radial-gradient(circle at 94% 14%,#ffd6ed 0 6%,transparent 6.5%),linear-gradient(145deg,#8de0ff 0%,#b8a8ff 45%,#ffb9db 100%);
+  background-attachment:fixed
+}
+
+.wrap {
+  max-width:920px
+}
+
+.hero {
+  padding:25px 12px 18px
+}
+
+.hero h1 {
+  color:#fff;
+  text-shadow:0 4px 0 #7a65d7,3px 5px 0 #7a65d7,-2px -1px 0 #7a65d7,2px -1px 0 #7a65d7;
+  font-size:clamp(35px,8vw,60px);
+  margin:14px 0 4px
+}
+
+.hero-sub {
+  font-size:clamp(17px,4vw,24px)!important;
+  font-weight:950;
+  color:#fff!important;
+  text-shadow:0 2px 0 #7a65d7,1px 3px 0 #7a65d7;
+  letter-spacing:.03em
+}
+
+.hero-pill {
+  display:inline-block;
+  margin-top:14px;
+  padding:10px 17px;
+  background:#fff;
+  border:2px solid #f4c4ed;
+  border-radius:999px;
+  font-weight:850;
+  color:#5847a5;
+  box-shadow:0 5px 0 #8c78df
+}
+
+.panel,.howto {
+  background:#ffffffed;
+  border:3px solid #fff;
+  border-radius:27px;
+  box-shadow:0 8px 0 #806cd4,0 14px 32px #5c3c8a24
+}
+
+.panel h2 {
+  color:#6547b5
+}
+
+.howto {
+  padding:20px;
+  margin:16px 0
+}
+
+.howto-title {
+  font-size:20px;
+  font-weight:950;
+  text-align:center;
+  color:#6849b5;
+  margin:0 0 16px
+}
+
+.steps {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:11px
+}
+
+.step {
+  display:flex;
+  gap:11px;
+  align-items:flex-start;
+  padding:13px;
+  border-radius:17px;
+  background:linear-gradient(135deg,#fff2a8,#ffe2f1 65%,#e5e2ff)
+}
+
+.step:nth-child(2) {
+  background:linear-gradient(135deg,#d8f6ff,#e7e0ff)
+}
+
+.step:nth-child(3) {
+  background:linear-gradient(135deg,#e0ffe9,#d8f3ff)
+}
+
+.step:nth-child(4) {
+  background:linear-gradient(135deg,#ffe0ef,#fff0b8)
+}
+
+.step-no {
+  flex:0 0 30px;
+  height:30px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#fff;
+  color:#6547b5;
+  font-weight:950;
+  box-shadow:0 2px 0 #c9b7f4
+}
+
+.step b {
+  font-size:13px;
+  line-height:1.5
+}
+
+.step p {
+  font-size:12px;
+  line-height:1.5;
+  color:#6e6680;
+  margin:4px 0 0
+}
+
+.howto-note {
+  margin-top:14px;
+  padding:13px 15px;
+  border-radius:16px;
+  background:#eaf8ff;
+  color:#4d5d96;
+  font-size:12px;
+  line-height:1.9;
+  font-weight:650
+}
+
+.btn {
+  box-shadow:0 3px 0 #d9cce8
+}
+
+.primary {
+  background:linear-gradient(135deg,#5b4cb3,#8d63d8);
+  color:#fff
+}
+
+.pinkbtn {
+  background:linear-gradient(135deg,#ff9ec8,#ffc9dc);
+  color:#76214f
+}
+
+.secondary {
+  background:#dff6ff;
+  color:#3d5b91
+}
+
+.stamp {
+  border:5px solid #fff;
+  box-shadow:0 5px 0 #d8c4f3,0 8px 18px #4b365312
+}
+
+.stamp.earned {
+  box-shadow:0 0 0 3px #ffb3d8,0 5px 0 #b6a3ed,0 8px 18px #4b365318
+}
+
+.stamp-date {
+  color:#5e479e
+}
+
+.stamp-state {
+  font-weight:750
+}
+
+.count {
+  background:#ffe0ef;
+  color:#a32e69;
+  border:1px solid #ffb5d5
+}
+
+input[type="file"] {
+  background:#fff8fc;
+  border:2px dashed #e5b7df;
+  padding:12px
+}
+
+.field input:not([type=checkbox]),.field select {
+  border:2px solid #eadff8
+}
+
+.foot {
+  color:#fff;
+  font-weight:800;
+  text-shadow:0 1px 3px #725db0
+}
+
+@media(max-width:520px) {
+  .steps {
+  grid-template-columns:1fr
+}
+
+.howto {
+  padding:16px
+}
+
+.hero {
+  padding-top:18px
+}
+
+
+}
+
+.complete-list {
+  display:flex;
+  flex-direction:column;
+  gap:8px
+}
+
+.collector {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:linear-gradient(90deg,#fff0a9,#ffe0ee,#e4e0ff);
+  padding:11px 13px;
+  border-radius:14px;
+  font-weight:800;
+  font-size:13px
+}
+
+.collector-no {
+  display:grid;
+  place-items:center;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  background:#fff;
+  color:#6547b5
+}
+
+.collector-badge {
+  margin-left:auto;
+  background:#fff;
+  border-radius:999px;
+  padding:6px 9px;
+  color:#c55b28;
+  font-size:11px
+}
+
+/* Orange / white / black visual refresh;
+  stamp artwork remains pastel */
+:root {
+  --ink:#171717;
+  --muted:#66615d;
+  --paper:#fffdf9;
+  --line:#eadfd5;
+  --hot:#f47721;
+  --pink:#ffe3d0;
+  --lilac:#f6e5da;
+  --blue:#e8edf0;
+  --yellow:#fff0b8;
+  --mint:#e2f2e8
+}
+
+body {
+  background:linear-gradient(145deg,#fffaf5 0%,#fff 52%,#fff1e5 100%);
+  background-attachment:fixed;
+  color:#171717;
+  font-family:'DM Sans','Kanit',sans-serif
+}
+
+:lang(th),body {
+  font-family:'DM Sans','Kanit',sans-serif
+}
+
+.hero {
+  padding:25px 12px 18px
+}
+
+
+.hero h1 {
+  color:#171717;
+  text-shadow:none;
+  font-weight:900;
+  letter-spacing:-.035em
+}
+
+.hero-sub {
+  color:#f47721!important;
+  text-shadow:none!important;
+  font-weight:800
+}
+
+.hero-pill {
+  background: #f47721;
+  border: 2px solid #171717;
+  color: #fff;
+  border-radius: 999px;
+  box-shadow: 0 4px 0 #171717;
+  font-weight: 800;
+}
+
+.panel,.howto {
+  background:#fff;
+  border:1px solid #eee1d7;
+  box-shadow:0 8px 0 #f3e6dc,0 14px 32px #22160d0b
+}
+
+.panel h2,.howto-title {
+  color:#171717
+}
+
+.step,.step:nth-child(2),.step:nth-child(3),.step:nth-child(4) {
+  background:#fff7f0;
+  border:1px solid #f1d7c4
+}
+
+.step-no {
+  background:#f47721;
+  color:#fff;
+  box-shadow:none
+}
+
+.howto-note {
+  background:#fff0e4;
+  color:#5d4534
+}
+
+.btn {
+  box-shadow:none
+}
+
+.primary {
+  background:#171717;
+  color:#fff
+}
+
+.primary:hover {
+  background:#f47721
+}
+
+.secondary {
+  background:#f2eee9;
+  color:#171717
+}
+
+.pinkbtn {
+  background:#f47721;
+  color:#fff
+}
+
+.status.ok {
+  background:#edf7ef;
+  color:#245c31
+}
+
+.status.err {
+  background:#fff0ed;
+  color:#9a3323
+}
+
+.status.info {
+  background:#f5f1ed;
+  color:#4b413a
+}
+
+.stamp {
+  border:5px solid #fff;
+  box-shadow:0 5px 0 #e9ddd4,0 8px 18px #21160d12
+}
+
+.stamp.earned {
+  box-shadow:0 0 0 3px #f47721,0 5px 0 #e9ddd4,0 8px 18px #21160d12
+}
+
+.stamp-date {
+  color:#171717;
+  font-weight:900
+}
+
+.stamp-state {
+  color:#746c66;
+  font-weight:800
+}
+
+.count {
+  background:#fff0e4;
+  color:#171717;
+  border:1px solid #f47721
+}
+
+.field input:not([type=checkbox]),.field select {
+  border:1px solid #e4d8cf;
+  outline-color:#f47721
+}
+
+input[type=file] {
+  background:#fffaf6;
+  border:1px dashed #f47721
+}
+
+.collector {
+  background:#fff3e9;
+  color:#171717;
+  border:1px solid #f1d8c6
+}
+
+.collector-no {
+  background:#f47721;
+  color:#fff
+}
+
+.collector-badge {
+  background:#171717;
+  color:#fff
+}
+
+.foot {
+  color:#6f655d;
+  text-shadow:none
+}
+
+@media(max-width:520px) {
+  .hero h1 {
+  font-size:clamp(32px,8vw,52px)
+}
+
+
+}
+  
+/* css */
+.hero h1{font-family:"Press Start 2P",monospace;font-size:clamp(19px,4vw,34px);color:#c5a5ff;text-shadow:3px 3px #563c89;line-height:1.65}
+.hero-sub,.hero-pill{color:#d7d0ef!important}
+.hero-pill{display:inline-block;margin-top:14px;padding:9px 14px;border:1px solid #9e7aff;border-radius:6px;background:#8e62ff22;font-family:"Press Start 2P",monospace;font-size:10px}
+.howto{background:#1b1a29!important;border:1px solid #3a3450!important;color:#f7f4ff!important;border-radius:18px}
+.howto p,.howto-note{color:#c5bfd8!important}
+.panel h2,.howto-title{font-family:"Press Start 2P",monospace!important;font-size:12px!important;line-height:1.8;color:#d4bfff}
+.field input,.field select{background:#11111b;color:#f7f4ff;border-color:#4c4365;border-radius:8px}
+.btn{border-radius:8px!important;font-family:"Rajdhani",sans-serif!important;font-weight:700;letter-spacing:.04em}
+.primary{background:#9468ff!important}.pinkbtn{background:#ef6fae!important}
+.hint{color:#aaa5c1}
+.game-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 20px}
+.stat-box{background:#1b1a29;border:1px solid #39334e;border-radius:12px;padding:16px;text-align:center;min-width:0}
+.stat-box .num{font:clamp(18px,3vw,28px) "Press Start 2P",monospace;color:#d3b9ff;display:block;margin-bottom:10px;overflow-wrap:anywhere}
+.stat-box .label{font-size:12px;color:#bdb5d5;letter-spacing:.08em;text-transform:uppercase}
+.game-bar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.level-chip{background:#2d2146;border:1px solid #a783ff;color:#dfccff;padding:8px 12px;border-radius:6px;font-family:"Press Start 2P",monospace;font-size:10px}
+.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin-top:14px}
+.cal-head{text-align:center;color:#aaa5c1;font-size:12px;font-weight:700;padding:5px 0}
+.cal-day{min-height:72px;background:#11111b;border:1px solid #383149;border-radius:8px;padding:7px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;color:#eee}
+.cal-day .day-num{font-weight:800;font-size:15px}.cal-day .day-status{font-size:10px;color:#a5a0b8;letter-spacing:.04em}
+.cal-day.earned{border-color:#ad86ff;background:linear-gradient(145deg,#302249,#211b32);box-shadow:inset 0 0 0 1px #ad86ff44}
+.cal-day.earned .day-status{color:#d8bfff}.cal-day.empty-day{opacity:.25}
+.cards-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.game-card{border:1px solid #49405f;border-radius:10px;background:#11111b;overflow:hidden;position:relative}
+.game-card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:linear-gradient(145deg,#30264b,#181722)}
+.game-card .card-meta{padding:9px;font-size:12px;display:flex;justify-content:space-between;gap:6px;align-items:center;color:#e9e1ff}
+.game-card.owned{border-color:#9d7aff;box-shadow:0 0 14px #a783ff22}.game-card.missing{opacity:.65}
+.game-card .rarity{font:9px "Press Start 2P",monospace;color:#c9b0ff}
+.effect-strip{padding:8px;background:#211a31;border-top:1px solid #44345f;color:#d9c7ff;font-size:11px;font-weight:700}
+.locked-card{min-height:155px;border:1px dashed #5c5571;border-radius:10px;background:repeating-linear-gradient(135deg,#191824,#191824 10px,#201e2d 10px,#201e2d 20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;color:#9991b4;text-align:center;padding:12px}
+.locked-card .lock{font-size:28px}.empty{color:#b8b0ce}
+.complete-list .collector{background:#242037;color:#eee;border:1px solid #39334e}
+.foot{color:#aaa5c1}
+@media(max-width:650px){.game-stats{gap:7px}.stat-box{padding:12px 6px}.stat-box .label{font-size:10px}.cards-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cal-day{min-height:58px;padding:5px}.cal-day .day-status{font-size:9px}.panel{padding:16px}}
+
+:root {
+  --ink: #18304a;
+  --muted: #53677d;
+  --paper: #fff8df;
+  --line: #18304a;
+  --pink: #ef3340;
+  --lilac: #168bff;
+  --blue: #168bff;
+  --yellow: #ffd928;
+  --mint: #20b957;
+  --hot: #ef3340;
+  --card-shadow: #15304f;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: linear-gradient(180deg, #78d8ff 0%, #d9f5ff 34%, #fff8df 34%, #fff8df 100%) fixed !important;
+  color: var(--ink) !important;
+  font-family: 'Rajdhani', 'IBM Plex Sans Thai', sans-serif !important;
+}
+
+/* Header and typography */
+.hero h1,
+.panel h2,
+.howto-title,
+.hero-pill,
+.level-chip,
+.game-card .rarity {
+  font-family: 'Press Start 2P', monospace !important;
+}
+
+.hero h1 {
+  color: var(--pink) !important;
+  text-shadow: 3px 3px 0 var(--yellow), 6px 6px 0 var(--ink) !important;
+  line-height: 1.65 !important;
+}
+
+.hero p,
+.hero-sub,
+
+.hero-pill {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 9px 14px;
+  background: var(--yellow) !important;
+  color: var(--ink) !important;
+  border: 3px solid var(--ink) !important;
+  border-radius: 8px !important;
+  box-shadow: 4px 4px 0 var(--ink) !important;
+  font-size: 10px;
+}
+
+/* Panels and instructions */
+.panel,
+.howto {
+  color: var(--ink) !important;
+  background: #fffdf3 !important;
+  border: 3px solid var(--ink) !important;
+  border-radius: 12px !important;
+  box-shadow: 6px 6px 0 var(--ink) !important;
+}
+
+.panel h2,
+.howto-title {
+  color: var(--pink) !important;
+  text-shadow: 1px 1px 0 var(--yellow) !important;
+  line-height: 1.8 !important;
+}
+
+.howto { background: #fff3bd !important; }
+.howto p,
+.howto-note,
+.hint { color: #53677d !important; }
+
+.step,
+.step:nth-child(2),
+.step:nth-child(3),
+.step:nth-child(4) {
+  background: #e4f7ff !important;
+  border: 2px solid var(--ink) !important;
+  border-radius: 9px !important;
+}
+
+.step-no {
+  background: var(--pink) !important;
+  color: #fff !important;
+  box-shadow: 0 3px 0 var(--ink) !important;
+}
+
+.howto-note {
+  background: var(--yellow) !important;
+  color: var(--ink) !important;
+  border: 2px solid var(--ink) !important;
+}
+
+/* Buttons */
+.btn {
+  font-family: 'Rajdhani', 'IBM Plex Sans Thai', sans-serif !important;
+  font-weight: 800 !important;
+  border-radius: 8px !important;
+}
+
+.primary {
+  background: var(--mint) !important;
+  color: #fff !important;
+  border: 2px solid var(--ink) !important;
+  box-shadow: 0 4px 0 #126d37 !important;
+}
+.primary:hover { background: #169847 !important; }
+
+.secondary {
+  background: var(--blue) !important;
+  color: #fff !important;
+  border: 2px solid var(--ink) !important;
+}
+
+.pinkbtn {
+  background: var(--pink) !important;
+  color: #fff !important;
+  border: 2px solid var(--ink) !important;
+  box-shadow: 0 4px 0 #a91d2a !important;
+}
+
+/* Form fields */
+.field input,
+.field select,
+.field textarea {
+  background: #fff !important;
+  color: var(--ink) !important;
+  border: 2px solid var(--ink) !important;
+  border-radius: 7px !important;
+  font-family: 'Rajdhani', 'IBM Plex Sans Thai', sans-serif !important;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 3px solid var(--yellow) !important;
+  border-color: var(--blue) !important;
+}
+
+input[type='file'] {
+  background: #fff !important;
+  color: var(--ink) !important;
+  border: 2px dashed var(--ink) !important;
+}
+
+/* Stats and level */
+.game-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 14px 0 20px;
+}
+
+.stat-box {
+  min-width: 0;
+  padding: 16px;
+  text-align: center;
+  background: var(--pink) !important;
+  color: #fff !important;
+  border: 3px solid var(--ink) !important;
+  border-radius: 10px !important;
+  box-shadow: 4px 4px 0 var(--ink) !important;
+}
+.stat-box:nth-child(3n + 1) { background: var(--pink) !important; color: #fff !important; }
+.stat-box:nth-child(3n + 2) { background: var(--blue) !important; color: #fff !important; }
+.stat-box:nth-child(3n) { background: var(--yellow) !important; color: var(--ink) !important; }
+
+.stat-box .num {
+  display: block;
+  margin-bottom: 10px;
+  color: inherit !important;
+  font: clamp(18px, 3vw, 28px) 'Press Start 2P', monospace !important;
+  text-shadow: 2px 2px 0 var(--ink) !important;
+  overflow-wrap: anywhere;
+}
+.stat-box .label {
+  color: inherit !important;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.game-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.level-chip {
+  padding: 8px 12px;
+  background: var(--yellow) !important;
+  color: var(--ink) !important;
+  border: 2px solid var(--ink) !important;
+  border-radius: 6px;
+  box-shadow: 3px 3px 0 var(--ink) !important;
+  font-size: 10px;
+}
+
+/* Calendar */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.cal-month-title {
+  grid-column: 1 / -1;
+  color: var(--ink);
+  font-family: "Press Start 2P", monospace;
+  font-size: clamp(11px, 2vw, 15px);
+  line-height: 1.7;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin: 0 0 5px;
+}
+
+.cal-head {
+  padding: 5px 0;
+  color: var(--ink) !important;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.cal-day {
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 7px;
+  background: #fff !important;
+  color: var(--ink) !important;
+  border: 2px solid var(--ink) !important;
+  border-radius: 7px !important;
+}
+.cal-day .day-num { font-size: 15px; font-weight: 800; }
+.cal-day .day-status { color: #53677d !important; font-size: 10px; letter-spacing: .04em; }
+.cal-day.earned {
+  background: var(--mint) !important;
+  color: #fff !important;
+  border-color: var(--ink) !important;
+  box-shadow: inset 0 0 0 2px #fff !important;
+}
+.cal-day.earned .day-status { color: #fff !important; }
+.cal-day.empty-day { opacity: .25; }
+
+/* Cards collection */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px !important;
+}
+
+.game-card {
+  position: relative;
+  overflow: hidden;
+  background: #fffdf3 !important;
+  border: 3px solid var(--ink) !important;
+  border-radius: 8px !important;
+  box-shadow: 4px 4px 0 var(--ink) !important;
+}
+.game-card:nth-child(4n + 1) { border-color: var(--pink) !important; }
+.game-card:nth-child(4n + 2) { border-color: var(--blue) !important; }
+.game-card:nth-child(4n + 3) { border-color: var(--yellow) !important; }
+.game-card:nth-child(4n) { border-color: var(--mint) !important; }
+.game-card:hover { transform: translateY(-2px); }
+
+.game-card .art-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  aspect-ratio: 2 / 3;
+  background: linear-gradient(135deg, #b9ecff, #fff3b4) !important;
+}
+.game-card .art-stage::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid #ffffffb8;
+  border-radius: 7px;
+  pointer-events: none;
+}
+.game-card img {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #b9ecff, #fff3b4) !important;
+}
+.game-card img.img-failed { display: none; }
+
+.card-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px;
+  color: var(--ink);
+  text-align: center;
+}
+.card-fallback .rank-label {
+  padding: 8px 6px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 5px;
+  color: var(--pink);
+  font: 10px 'Press Start 2P', monospace;
+}
+.card-fallback .character-mark {
+  font-size: clamp(38px, 6vw, 64px);
+  filter: drop-shadow(2px 3px #ffffffb0);
+}
+.card-fallback .placeholder-name {
+  font: clamp(9px, 1.2vw, 13px) 'Press Start 2P', monospace;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.card-fallback .skin-label {
+  padding: 5px 8px;
+  background: #fff;
+  border-radius: 4px;
+  font: 700 10px 'Rajdhani', sans-serif;
+  letter-spacing: .13em;
+}
+
+.game-card .card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 9px 10px 5px;
+  background: #fffdf3 !important;
+  color: var(--ink) !important;
+  font-size: 12px;
+  font-weight: 700;
+}
+.game-card .rarity { color: var(--pink) !important; font-size: 9px !important; }
+.effect-strip {
+  padding: 9px;
+  background: var(--yellow) !important;
+  color: var(--ink) !important;
+  border-top: 2px solid var(--ink) !important;
+  font-size: 11px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.game-card.missing { opacity: .86; }
+.game-card.missing .art-stage::after {
+  content: 'NOT FOUND';
+  position: absolute;
+  z-index: 3;
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  padding: 0;
+  background: transparent;
+  color: #8a8a8a;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-shadow: none;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+.game-card.owned { box-shadow: 0 0 0 2px var(--mint), 4px 4px 0 var(--ink) !important; }
+.game-card.owned .art-stage::after {
+  content: '✓ COLLECTED';
+  position: absolute;
+  z-index: 4;
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  padding: 6px 3px;
+  background: var(--mint);
+  color: #fff;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.locked-card {
+  min-height: 155px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px;
+  background: repeating-linear-gradient(135deg, #d9f2ff, #d9f2ff 10px, #b9e8ff 10px, #b9e8ff 20px) !important;
+  color: var(--ink) !important;
+  border: 3px dashed var(--ink) !important;
+  border-radius: 8px !important;
+  text-align: center;
+}
+.locked-card .lock { font-size: 28px; }
+.empty { color: #53677d; }
+.count { background: var(--yellow); color: var(--ink); border: 2px solid var(--ink); }
+
+/* Collector list and footer */
+.collector,
+.complete-list .collector {
+  background: #fff3bd !important;
+  color: var(--ink) !important;
+  border: 2px solid var(--ink) !important;
+  border-radius: 8px !important;
+}
+.collector-no { background: var(--pink); color: #fff; }
+.collector-badge { background: var(--blue); color: #fff; }
+.badge,
+.tag { font-family: 'Rajdhani', 'IBM Plex Sans Thai', sans-serif !important; font-weight: 700 !important; }
+.hint,
+.foot,
+footer,
+.footer { color: #53677d !important; }
+
+/* Responsive layout */
+@media (max-width: 650px) {
+  .hero h1 { font-size: clamp(15px, 4vw, 24px) !important; line-height: 1.8 !important; }
+  .panel h2,
+  .howto-title { font-size: 10px !important; }
+  .panel,
+  .howto { box-shadow: 4px 4px 0 var(--ink) !important; }
+  .game-stats { gap: 7px; }
+  .stat-box { padding: 12px 6px; box-shadow: 3px 3px 0 var(--ink) !important; }
+  .stat-box .label { font-size: 10px; }
+  .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px !important; }
+  .game-card .card-meta { padding: 7px; font-size: 10px; }
+  .game-card .rarity { font-size: 7px !important; }
+  .effect-strip { font-size: 10px; }
+  .card-fallback .placeholder-name { font-size: 9px; }
+  .cal-day { min-height: 58px; padding: 5px; }
+  .cal-day .day-status { font-size: 9px; }
+}
+
+
+/* EVENT DATE — single authoritative Mario-style rule */
+.event-datetime {
+  display: inline-block !important;
+  margin: 14px 8px 10px !important;
+  padding: 12px 18px !important;
+  background: #ef3340 !important;
+  background-color: #ef3340 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 3px solid #18304a !important;
+  border-radius: 8px !important;
+  font-family: "Press Start 2P", monospace !important;
+  font-size: clamp(8px, 1.25vw, 13px) !important;
+  font-weight: 400 !important;
+  line-height: 1.8 !important;
+  text-shadow: none !important;
+  box-shadow: 5px 5px 0 #18304a !important;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  .event-datetime {
+    font-size: clamp(7px, 2.1vw, 10px) !important;
+    padding: 10px 12px !important;
+    margin: 12px 5px 10px !important;
+  }
+}
+</style>
+ </head>
+ <body>
+  <div class="wrap">
+   <header class="hero">
+    <h1>
+     WE VOTE RIIZE
+    </h1>
+    <p class="hero-sub">
+     2026 MAMA FAN’S CHOICE
+    </p>
+    <p class="event-datetime">
+     2026.10.12 19:00 - 10.22 23:59 (KST)
+    </p>
+    <div class="hero-pill">
+     Vote for collecting cards
+    </div>
+   </header>
+   <section class="game-stats" aria-label="Live event stats">
+    <div class="stat-box"><span class="num" id="playerTotal">—</span><span class="label">Players joined</span></div>
+    <div class="stat-box"><span class="num" id="todayVotes">—</span><span class="label">Votes today · KST</span></div>
+    <div class="stat-box"><span class="num" id="totalVotes">—</span><span class="label">Total check-ins</span></div>
+   </section>
+   <section class="panel game-bar"><div><div class="hint" id="periodActiveLabel">PERIOD 01 · ACTIVE MISSION · 12/10/2026–22/10/2026</div><h2 style="margin:8px 0 0">CHECK-IN EVENT</h2><div class="hint">CHECK-IN CALENDAR · KST</div></div><span class="level-chip">CARD DROP WHEN LV.UP</span></section>
+   <section class="howto">
+    <div class="howto-title">
+     วิธีใช้งาน / HOW TO COLLECT CARDS
+    </div>
+    <div class="steps">
+     <div class="step">
+      <span class="step-no">
+       1
+      </span>
+      <div>
+       <b>
+       Log in เข้าใช้งานใน Mnet Plus
+       </b>
+       <p>
+        เลือก 2026 MAMA AWARDS แล้วเข้า FAN’S CHOICE Category
+       </p>
+      </div>
+     </div>
+     <div class="step">
+      <span class="step-no">
+       2
+      </span>
+      <div>
+       <b>
+        Vote RIIZE
+       </b>
+       <p>
+        เลือก RIIZE ในหมวด FAN’S CHOICE MALE แล้วกด Submit
+       </p>
+      </div>
+     </div>
+     <div class="step">
+      <span class="step-no">
+       3
+      </span>
+      <div>
+       <b>
+        กด View Voting Certificate
+       </b>
+       <p>
+        แคปหน้าจอหรือบันทึกใบ Voting Certificate ที่มีวันที่และเวลา
+       </p>
+      </div>
+     </div>
+     <div class="step">
+      <span class="step-no">
+       4
+      </span>
+      <div>
+       <b>
+        กรอก Twitter account และอัปโหลดไฟล์ภาพในเว็บนี้
+       </b>
+        <p>
+         สุ่มรับการ์ดได้วันละ 1 ใบต่อ 1 แอค โดยนับวันตามเวลาเกาหลี (KST)
+        </p>
+       </b>
+      </div>
+     </div>
+    </div>
+    <div class="howto-note">
+     🧡 กิจกรรมสะสมการ์ด 2026 MAMA FAN’S CHOICE
+     <br/>
+     🧡 รับการ์ดได้วันละ 1 ใบต่อ 1 twitter account
+    </div>
+   </section>
+   <section class="panel">
+    <h2>
+     🧡 Your account
+    </h2>
+    <div class="field">
+     <label for="account">
+      X / Twitter account
+     </label>
+     <input autocomplete="off" id="account" maxlength="80" placeholder="@youraccount"/>
+     <div class="hint">
+      กรอกแอคเดิมเพื่อเปิดดูประวัติการ์ดที่สะสมไว้
+     </div>
+    </div>
+    <div class="actions">
+     <button class="btn primary" id="loadBtn">
+      ดู CARD COLLECTION ของฉัน
+     </button>
+    </div>
+    <div class="status" id="accountStatus">
+    </div>
+   </section>
+   <section class="panel">
+    <h2>
+     🩵 Upload to collect a card
+    </h2>
+    <div class="field">
+     <label for="proof">
+      อัปโหลดภาพ Voting Certificate
+     </label>
+     <input accept="image/*" id="proof" type="file"/>
+    </div>
+    <div class="field">
+     <label>
+      <input id="backdate" style="width:auto;vertical-align:middle" type="checkbox"/>
+      ต้องการอัปโหลดหลักฐานเพื่อรับการ์ดของวันย้อนหลัง
+     </label>
+     <div class="hint">
+      เลือกวันที่ต้องการรับการ์ด
+     </div>
+    </div>
+    <div class="field hidden" id="dateField">
+     <label for="chosenDate">
+      วันที่ต้องการรับการ์ด
+     </label>
+     <select id="chosenDate">
+     </select>
+    </div>
+    <div class="actions">
+     <button class="btn pinkbtn" id="stampBtn">
+      ตรวจสอบและรับการ์ด
+     </button>
+    </div>
+    <div class="status" id="uploadStatus">
+    </div>
+   </section>
+   <section class="panel">
+    <div class="certificate-head">
+     <h2>
+      🗓 CHECK-IN CALENDAR
+     </h2>
+     <span class="count" id="count">
+      LV. 0 / 22
+     </span>
+    </div>
+    <div class="calendar" id="stampGrid"></div>
+    <div class="game-bar" style="margin-top:16px"><span class="hint">เช็กอินสำเร็จ +1 LV. รับการ์ด 1 ใบ · LV.22 รับการ์ดครบทั้งหมด</span><span class="level-chip" id="levelChip">LV. 0</span></div>
+    <h3 style="color:#8969df;margin-top:24px">CARD COLLECTION <span class="hint" style="font-size:12px">· PERIOD 01: C + R / PERIOD 02: UNOWNED + SR</span></h3>
+    <div class="cards-grid" id="myCards"><div class="empty">กรอกแอคแล้วกดดูคอลเลกชันเพื่อดูการ์ดทั้ง 24 แบบ</div></div>
+    <h3 style="color:#8969df;margin-top:24px">PERIOD 02 · SR + UNOWNED CARDS · SWITCH IN EVENT_SETTINGS</h3>
+    <div class="cards-grid" id="lockedCards"></div>
+    <div class="actions">
+     <button class="btn primary" id="downloadBtn">
+      ดาวน์โหลด Card collection
+     </button>
+     <button class="btn secondary" id="clearInputBtn">
+      ล้างช่องอัปโหลด
+     </button>
+    </div>
+   </section>
+   <section class="panel">
+    <div class="certificate-head">
+     <h2>
+      🏆 TOP PLAYER · HIGHEST LEVEL
+     </h2>
+     <span class="count" id="completeCount">
+      TOP LV. —
+     </span>
+    </div>
+    <p class="hint" id="completeHint">
+     แสดงแอคที่มีเลเวลสูงสุดจากจำนวนวันเช็กอินสำเร็จ
+    </p>
+    <div class="complete-list" id="completeList">
+     <div class="empty">
+      กำลังโหลดรายชื่อ…
+     </div>
+    </div>
+   </section>
+   <div class="foot">
+    WE VOTE RIIZE · 2026 MAMA FAN’S CHOICE
+    <br/>
+    #พี่สาวโหวตน้องข้าว
+   </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js">
+  </script>
+  <script>
+// ===== EVENT SETTINGS: period =====
+const EVENT_SETTINGS = {
+  activePeriod: 1, // 1 or 2
+  periods: {
+    1: {
+      start: "2026-10-12", end: "2026-10-22",
+      startTime: "19:00", endTime: "23:59", timezone: "KST",
+      title: "PERIOD 01 · ACTIVE MISSION"
+    },
+    2: {
+      start: "2026-10-26", end: "2026-11-05",
+      startTime: "00:00", endTime: "23:59", timezone: "KST",
+      title: "PERIOD 02 · SR + UNOWNED CARDS"
+    }
+  }
+};
+function activePeriodConfig(){ return EVENT_SETTINGS.periods[EVENT_SETTINGS.activePeriod] || EVENT_SETTINGS.periods[1]; }
+function renderEventDate(){
+  const el = document.querySelector(".event-datetime");
+  const cfg = activePeriodConfig();
+  if(!el || !cfg) return;
+  const fmt = (iso) => {
+    const [y,m,d] = iso.split("-");
+    return `${y}.${m}.${d}`;
+  };
+  el.textContent = `${fmt(cfg.start)} ${cfg.startTime} - ${fmt(cfg.end)} ${cfg.endTime} (${cfg.timezone || "KST"})`;
+}
+renderEventDate();
+function dateParts(iso){ const [year,month,day]=iso.split("-").map(Number); return {year,month,day}; }
+function isoDate(year,month,day){ return `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`; }
+function eventDateLabel(iso){ const d=dateParts(iso); return `${d.day}/${d.month}/${d.year}`; }
+function eventDates(){ const cfg=activePeriodConfig(),out=[]; for(let t=Date.parse(cfg.start+"T00:00:00Z");t<=Date.parse(cfg.end+"T00:00:00Z");t+=86400000) out.push(new Date(t).toISOString().slice(0,10)); return out; }
+function isActivePeriodDate(iso){ const cfg=activePeriodConfig(); return iso>=cfg.start && iso<=cfg.end; }
+
+const DAYS = [
+ {day:12,letter:"12",bg:"linear-gradient(135deg,#e9d5ff,#c4b5fd)"},
+ {day:13,letter:"13",bg:"linear-gradient(135deg,#dbeafe,#93c5fd)"},
+ {day:14,letter:"14",bg:"linear-gradient(135deg,#fce7f3,#f9a8d4)"},
+ {day:15,letter:"15",bg:"linear-gradient(135deg,#dcfce7,#86efac)"},
+ {day:16,letter:"16",bg:"linear-gradient(135deg,#fef3c7,#fcd34d)"},
+ {day:17,letter:"17",bg:"linear-gradient(135deg,#fce7f3,#f9a8d4)"},
+ {day:18,letter:"18",bg:"linear-gradient(135deg,#dbeafe,#93c5fd)"},
+ {day:19,letter:"19",bg:"linear-gradient(135deg,#fff0bf,#f8dfed)"},
+ {day:20,letter:"20",bg:"linear-gradient(135deg,#dff6e8,#e6e0ff)"},
+ {day:21,letter:"21",bg:"linear-gradient(135deg,#f9dfed,#fff0bf)"},
+ {day:22,letter:"22",bg:"linear-gradient(135deg,#dff2ff,#e8e0ff)"}
+];
+const $ = id => document.getElementById(id);
+const CARD_SET = [
+ {id:"shotaro-c",name:"SHOTARO",rank:"C",skin:"CHARACTER",file:"images/shotaro-c.png",effect:"RHYTHM SUPPORT"},
+ {id:"eunseok-c",name:"EUNSEOK",rank:"C",skin:"CHARACTER",file:"images/eunseok-c.png",effect:"TACTICAL LEADER"},
+ {id:"sungchan-c",name:"SUNGCHAN",rank:"C",skin:"CHARACTER",file:"images/sungchan-c.png",effect:"IRON GUARDIAN"},
+ {id:"wonbin-c",name:"WONBIN",rank:"C",skin:"CHARACTER",file:"images/wonbin-c.png",effect:"TRICKSTER"},
+ {id:"sohee-c",name:"SOHEE",rank:"C",skin:"CHARACTER",file:"images/sohee-c.png",effect:"FEARLESS ACE"},
+ {id:"anton-c",name:"ANTON",rank:"C",skin:"CHARACTER",file:"images/anton-c.png",effect:"MIND ARCHITECT"},
+ ...["SHOTARO","EUNSEOK","SUNGCHAN","WONBIN","SOHEE","ANTON"].flatMap((n,i)=>[
+  {id:n.toLowerCase()+"-cool",name:n,rank:"R",skin:"COOL",file:`images/${n.toLowerCase()}-r-cool.png`,effect:["+100 ATK SPD","+100 ACCURACY","+100 ATK","+100 CRIT RATE","+100 CRIT DMG","+100 STRATEGY"][i]},
+  {id:n.toLowerCase()+"-cute",name:n,rank:"R",skin:"CUTE",file:`images/${n.toLowerCase()}-r-cute.png`,effect:["+100 TEAM SPD","+100 LUCK","+100 SHIELD","+100 EVADE","+100 HP RECOVERY","+100 SKILL RATE"][i]}
+ ]),
+ ...["SHOTARO","EUNSEOK","SUNGCHAN","WONBIN","SOHEE","ANTON"].map((n,i)=>({id:n.toLowerCase()+"-sr",name:n,rank:"SR",skin:"PROJECT X",file:`images/${n.toLowerCase()}-sr.png`,effect:["+200 TEAM SPD","+200 COMMAND","+200 DEF","+200 CRIT RATE","+200 ATK","+200 DEBUFF RES"][i]}))
+];
+const PERIOD2_LOCKED = [];
+function localCardKey(account){return `we_vote_riize_cards_${account}`}
+function localCards(account){try{return JSON.parse(localStorage.getItem(localCardKey(account))||"[]")}catch{return []}}
+function saveLocalCards(account,ids){localStorage.setItem(localCardKey(account),JSON.stringify([...new Set(ids)]))}
+function localCardRecords(account){try{return JSON.parse(localStorage.getItem(`we_vote_riize_card_records_${account}`)||"[]")}catch{return []}}
+async function ownedCardIds(account){
+ if(!DB_CONFIGURED)return localCards(account);
+ try{const rows=await dbRequest(`card_records?select=card_id&account=eq.${encodeURIComponent(account)}`);return rows.map(r=>r.card_id)}catch(e){return localCards(account)}
+}
+async function saveOwnedCard(account,cardId,day){
+ if(!DB_CONFIGURED){const ids=localCards(account);if(!ids.includes(cardId)){ids.push(cardId);saveLocalCards(account,ids)}const records=localCardRecords(account);if(!records.some(r=>r.card_id===cardId)){records.push({card_id:cardId,awarded_date:day});localStorage.setItem(`we_vote_riize_card_records_${account}`,JSON.stringify(records))}return}
+ try{await dbRequest("card_records",{method:"POST",headers:{"Prefer":"return=representation"},body:JSON.stringify({account,card_id:cardId,awarded_date:day})})}catch(e){if(!String(e.message).toLowerCase().includes("duplicate")&&!String(e.message).includes("23505"))throw e}
+}
+async function ownedCardRecords(account){
+ if(!DB_CONFIGURED){const records=localCardRecords(account);const known=new Set(records.map(r=>r.card_id));return [...records,...localCards(account).filter(id=>!known.has(id)).map(card_id=>({card_id,awarded_date:null}))]}
+ try{return await dbRequest(`card_records?select=card_id,awarded_date&account=eq.${encodeURIComponent(account)}&order=awarded_date.asc`)}catch(e){const records=localCardRecords(account);const known=new Set(records.map(r=>r.card_id));return [...records,...localCards(account).filter(id=>!known.has(id)).map(card_id=>({card_id,awarded_date:null}))]}
+}
+async function drawCard(account,day){
+ const owned=await ownedCardIds(account);
+ // Period 1: C/R only. Period 2: any card not owned yet, including all new SR cards.
+ const available=CARD_SET.filter(c=>!owned.includes(c.id) && (EVENT_SETTINGS.activePeriod===2 || c.rank!=="SR"));
+ if(!available.length)return null;
+ let card;
+ if(EVENT_SETTINGS.activePeriod===2){
+   card=available[Math.floor(Math.random()*available.length)];
+ } else {
+   const tiers=[{rank:"C",weight:70},{rank:"R",weight:30}]
+    .map(t=>({...t,cards:available.filter(c=>c.rank===t.rank)})).filter(t=>t.cards.length);
+   const totalWeight=tiers.reduce((sum,t)=>sum+t.weight,0);
+   let roll=Math.random()*totalWeight; let chosenTier=tiers[tiers.length-1];
+   for(const tier of tiers){roll-=tier.weight;if(roll<0){chosenTier=tier;break}}
+   card=chosenTier.cards[Math.floor(Math.random()*chosenTier.cards.length)];
+ }
+ await saveOwnedCard(account,card.id,day);
+ return card;
+}
+function renderLockedCards(){
+ const el=$("lockedCards");if(!el)return;
+ if(EVENT_SETTINGS.activePeriod===2){el.innerHTML='<div class="empty">PERIOD 2 เปิดแล้ว · การ์ดที่ยังไม่ได้รับจะสุ่มรวมกับ SR เมื่อเช็กอินสำเร็จ</div>';return}
+ const period2Cards=CARD_SET.filter(c=>c.rank==="SR");
+ el.innerHTML=period2Cards.map(c=>`<article class="game-card missing project-x"><div class="art-stage"><div class="card-fallback"><span class="rank-label">RANK SR</span><span class="character-mark">✧</span><strong class="placeholder-name">${c.name}</strong><span class="skin-label">PROJECT X · PERIOD 02</span></div></div><div class="card-meta"><b>${c.name}</b><span class="rarity">LOCKED</span></div></article>`).join("");
+}
+async function renderCards(account){
+ const el=$("myCards");if(!el)return;
+ const ids=account?await ownedCardIds(account):[];
+ const palettes={SHOTARO:['#f7a3c5','#ffe2ef','#ffd5a7'],EUNSEOK:['#f4d75e','#fff4b8','#ffe7a8'],SUNGCHAN:['#72b7ff','#d7efff','#d8ddff'],WONBIN:['#a887f0','#eee1ff','#d7dfff'],SOHEE:['#e45b65','#ffd9dc','#ffe6cf'],ANTON:['#34c89a','#d8fff0','#d6f5e9']};
+ const marks={SHOTARO:'♫',EUNSEOK:'✦',SUNGCHAN:'⬟',WONBIN:'★',SOHEE:'♡',ANTON:'⌘'};
+ // SR cards belong to Period 2 only; do not show them in Period 1 collection.
+ const visibleCards=CARD_SET.filter(c=>EVENT_SETTINGS.activePeriod===2 || c.rank!=="SR");
+ el.innerHTML=visibleCards.map(c=>{
+  const owned=ids.includes(c.id);const [accent,bg1,bg2]=palettes[c.name]||['#a887f0','#eee1ff','#d7dfff'];
+  const skinClass=c.rank==='SR'?'project-x':c.skin==='COOL'?'cool':c.skin==='CUTE'?'cute':'character';
+  const mark=c.rank==='SR'?'✧':c.skin==='COOL'?'⚡':c.skin==='CUTE'?'♡':(marks[c.name]||'★');
+  const bgA=c.rank==='SR'?'#d6c3ff':c.skin==='COOL'?'#b9dfff':c.skin==='CUTE'?'#ffd5e9':bg1;
+  const bgB=c.rank==='SR'?'#fff0b7':c.skin==='COOL'?'#e7e2ff':c.skin==='CUTE'?'#fff0bb':bg2;
+  return `<article class="game-card ${owned?'owned':'missing'} ${skinClass}" style="--card-accent:${accent};--card-bg1:${bgA};--card-bg2:${bgB}">
+   <div class="art-stage"><div class="card-fallback"><span class="rank-label">RANK ${c.rank}</span><span class="character-mark">${mark}</span><strong class="placeholder-name">${c.name}</strong><span class="skin-label">${c.skin==='CHARACTER'?'CHARACTER CARD':c.skin==='PROJECT X'?'PROJECT X':c.skin+' SKIN'}</span></div>${owned?`<img src="${c.file}" alt="${c.name} ${c.rank} ${c.skin}" onerror="this.classList.add('img-failed')" loading="lazy">`:``}</div>
+   <div class="card-meta"><b>${c.name}</b><span class="rarity">${c.rank}</span></div>
+  </article>`;
+ }).join('');
+}
+async function updatePublicStats(){try{let rows;if(DB_CONFIGURED)rows=await dbRequest("stamp_records?select=account,stamp_date");else{const d=JSON.parse(localStorage.getItem("we_vote_riize_stamps")||"{}");rows=Object.entries(d).flatMap(([account,dates])=>dates.map(stamp_date=>({account,stamp_date})))}const accounts=new Set(rows.map(r=>r.account));const today=kstDate();const countToday=rows.filter(r=>r.stamp_date===today).length;$("playerTotal").textContent=accounts.size;$("todayVotes").textContent=countToday;$("totalVotes").textContent=rows.length;const levels={};rows.forEach(r=>levels[r.account]=(levels[r.account]||0)+1);const top=Object.entries(levels).sort((a,b)=>b[1]-a[1])[0];if(top){$("completeCount").textContent=`LV. ${top[1]}`;$("completeHint").textContent="AGENT WITH THE HIGHEST LEVEL";$("completeList").innerHTML=`<div class="collector"><span class="collector-no">★</span><span>@${escapeHTML(top[0])}</span><span class="collector-badge">LV. ${top[1]}</span></div>`}else{$("completeCount").textContent="TOP LV. —";$ ("completeList").innerHTML='<div class="empty">ยังไม่มีผู้เล่นเช็กอิน</div>'}}catch(e){$("playerTotal").textContent="—";$("todayVotes").textContent="—";$("totalVotes").textContent="—"}}
+
+// ใส่ Project URL และ anon key จาก Supabase ของคุณก่อน deploy
+const SUPABASE_URL = "https://mpsecejxdmxlqrhqndmi.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_wCR6XbvdJCWa_5VvbFdjlQ_Pj6svmpz";
+const DB_CONFIGURED = !SUPABASE_URL.includes("YOUR-PROJECT") && !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+let currentAccount = "";
+function cleanAccount(v){ return v.trim().replace(/^@+/,"").toLowerCase(); }
+async function dbRequest(path, options={}) {
+  if(!DB_CONFIGURED) throw new Error("ยังไม่ได้ตั้งค่า Supabase URL และ anon key");
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...options,
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": options.prefer || "return=representation",
+      ...(options.headers||{})
+    }
+  });
+  const body = await response.text();
+  if(!response.ok) throw new Error(body || `Database error ${response.status}`);
+  return body ? JSON.parse(body) : [];
+}
+async function accountRecordFor(account) {
+  if(!DB_CONFIGURED) {
+    const local=JSON.parse(localStorage.getItem("we_vote_riize_stamps")||"{}");
+    return {stamps:local[account]||[]};
+  }
+  const rows=await dbRequest(`stamp_records?select=stamp_date&account=eq.${encodeURIComponent(account)}&order=stamp_date.asc`);
+  return {stamps:rows.map(r=>r.stamp_date)};
+}
+async function addStamp(account, stampDate) {
+  if(!DB_CONFIGURED) {
+    const local=JSON.parse(localStorage.getItem("we_vote_riize_stamps")||"{}");
+    local[account]=local[account]||[];
+    if(local[account].includes(stampDate)) return false;
+    local[account].push(stampDate);local[account].sort();
+    localStorage.setItem("we_vote_riize_stamps",JSON.stringify(local));
+    return true;
+  }
+  try {
+    await dbRequest("stamp_records", {
+      method:"POST",
+      headers:{"Prefer":"return=representation"},
+      body:JSON.stringify({account,stamp_date:stampDate})
+    });
+    return true;
+  } catch(e) {
+    if(String(e.message).includes("23505") || String(e.message).toLowerCase().includes("duplicate")) return false;
+    throw e;
+  }
+}
+function currentEligibleDays() {
+ const cfg=activePeriodConfig(),today=kstDate();
+ if(today<cfg.start)return [];
+ const last=today>cfg.end?cfg.end:today;
+ return eventDates().filter(d=>d<=last);
+}
+async function loadCompleteAccounts() {
+ const box=$("completeList"),eligible=currentEligibleDays(),total=eligible.length,cfg=activePeriodConfig();
+ const today=kstDate(),last=eligible.length?eligible[eligible.length-1]:cfg.start;
+ $("completeHint").textContent=total?`Player ที่เลเวลสูงสุดใน Period ${EVENT_SETTINGS.activePeriod} (${eventDateLabel(cfg.start)}–${eventDateLabel(last)})`:`รายชื่อผู้สะสมครบจะเริ่มแสดงเมื่อถึง ${eventDateLabel(cfg.start)}`;
+ if(!total){paintCompleteAccounts([],total);return}
+ if(!DB_CONFIGURED){const local=JSON.parse(localStorage.getItem("we_vote_riize_stamps")||"{}");const complete=Object.entries(local).filter(([_,dates])=>eligible.every(date=>new Set(dates).has(date))).map(([account])=>account);paintCompleteAccounts(complete,total);return}
+ try{const rows=await dbRequest("stamp_records?select=account,stamp_date&order=account.asc");const map={};rows.forEach(r=>{map[r.account]=map[r.account]||new Set();map[r.account].add(r.stamp_date)});const complete=Object.entries(map).filter(([_,dates])=>eligible.every(date=>dates.has(date))).map(([account])=>account);paintCompleteAccounts(complete,total)}catch(e){box.innerHTML='<div class="empty">โหลดรายชื่อไม่สำเร็จ กรุณาตรวจการตั้งค่าฐานข้อมูล</div>';$("completeCount").textContent="— COMPLETE"}
+}
+function paintCompleteAccounts(accounts, total = currentEligibleDays().length) {
+  $("completeCount").textContent=`${accounts.length} COMPLETE`;
+  $("completeList").innerHTML=accounts.length
+    ? accounts.map((a,i)=>`<div class="collector"><span class="collector-no">${i+1}</span><span>@${escapeHTML(a)}</span><span class="collector-badge">${total}/${total} 🧡</span></div>`).join("")
+    : '<div class="empty">ยังไม่มีผู้เล่นเข้าร่วม 🧡</div>';
+}
+function escapeHTML(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function kstDate(date=new Date()){
+  return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit"}).format(date);
+}
+function kstDayFromText(s){
+  // OCR timestamp is written in Thai-local time on the certificate, but interpreted as Korean time.
+  const m=s.match(/(20\d{2})[.\-/]\s*(\d{1,2})[.\-/]\s*(\d{1,2})\s+(\d{1,2})[:.](\d{2})/);
+  if(!m) return null;
+  let [_,y,mo,d,h,mi]=m;
+  y=+y;mo=+mo;d=+d;h=+h;mi=+mi;
+  // Certificate timestamp is Thailand time (UTC+7). Convert to KST by adding 2 hours.
+  const converted = new Date(Date.UTC(y,mo-1,d,h,mi) + 2*60*60*1000);
+  return {date:converted.toISOString().slice(0,10),year:converted.getUTCFullYear(),month:converted.getUTCMonth()+1,day:converted.getUTCDate(),hour:converted.getUTCHours(),minute:converted.getUTCMinutes()};
+}
+function dateForDay(day){ const cfg=activePeriodConfig(); const start=dateParts(cfg.start); return isoDate(start.year,start.month,day); }
+function readDB(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}")}catch(e){return {}}}
+function writeDB(db){localStorage.setItem(STORAGE_KEY,JSON.stringify(db))}
+function accountRecord(){const db=readDB();return db[currentAccount]||{stamps:[]}}
+function showStatus(id,msg,type="info"){const el=$(id);el.textContent=msg;el.className="status show "+type}
+function hideStatus(id){$(id).className="status"}
+function setupDates(){
+ const dates=eventDates();
+ $("chosenDate").innerHTML=dates.map(d=>`<option value="${d}">${eventDateLabel(d)}</option>`).join("");
+ $("backdate").addEventListener("change",()=> $("dateField").classList.toggle("hidden",!$("backdate").checked));
+ const cfg=activePeriodConfig();
+ const activeLabel=$("periodActiveLabel"); if(activeLabel)activeLabel.textContent=`${cfg.title} · ${eventDateLabel(cfg.start)}–${eventDateLabel(cfg.end)}`;
+}
+async function render(){
+ let rec={stamps:[]};if(currentAccount){try{rec=await accountRecordFor(currentAccount)}catch(e){showStatus("accountStatus","เชื่อมต่อฐานข้อมูลไม่สำเร็จ กรุณาตรวจการตั้งค่า Supabase","err")}}
+ const earned=new Set(rec.stamps||[]),level=earned.size,cfg=activePeriodConfig();
+ $("count").textContent=`LV. ${level} / ${eventDates().length}`;$("levelChip").textContent=`LV. ${level}`;
+ const headers=["SUN","MON","TUE","WED","THU","FRI","SAT"];
+ // Show only the two calendar weeks that overlap the active period.
+ const startMs=Date.parse(cfg.start+"T00:00:00Z"),endMs=Date.parse(cfg.end+"T00:00:00Z");
+ const firstDate=new Date(startMs),firstWeekStart=startMs-firstDate.getUTCDay()*86400000;
+ const weekCount=Math.min(2,Math.ceil(((endMs-firstWeekStart)/86400000+1)/7));
+ const monthName = (iso) => new Date(iso + "T00:00:00Z").toLocaleString("en-US", { month: "long", timeZone: "UTC" });
+ const startMonth=monthName(cfg.start),endMonth=monthName(cfg.end);
+ const monthTitle=startMonth===endMonth?startMonth:`${startMonth} / ${endMonth}`;
+ let calendarHTML=`<div class="cal-month-title">${monthTitle}</div>`+headers.map(d=>`<div class="cal-head">${d}</div>`).join("");
+ for(let i=0;i<weekCount*7;i++){
+   const t=firstWeekStart+i*86400000,date=new Date(t),iso=date.toISOString().slice(0,10),day=date.getUTCDate(),valid=isActivePeriodDate(iso),got=valid&&earned.has(iso);
+   calendarHTML+=valid?`<div class="cal-day ${got?"earned":""}"><span class="day-num">${day}</span><span class="day-status">${got?"✓ CHECKED":"LOCKED"}</span></div>`:`<div class="cal-day empty-day"><span class="day-num"></span><span class="day-status"></span></div>`;
+ }
+ $("stampGrid").innerHTML=calendarHTML;
+ const heading=document.querySelector('#myCards')?.previousElementSibling;if(heading)heading.innerHTML=`CARD COLLECTION <span class="hint" style="font-size:12px">· PERIOD ${String(EVENT_SETTINGS.activePeriod).padStart(2,"0")} · ${EVENT_SETTINGS.activePeriod===2?'UNOWNED + SR':'C + R'}</span>`;
+ const p2heading=$("lockedCards")?.previousElementSibling;if(p2heading)p2heading.textContent=EVENT_SETTINGS.activePeriod===2?"PERIOD 02 · ACTIVE · SR + UNOWNED CARDS":"PERIOD 02 · SR CARDS · LOCKED";
+ await renderCards(currentAccount);renderLockedCards();
+}
+
+$("loadBtn").addEventListener("click",async()=>{
+  const acc=cleanAccount($("account").value);
+  if(!acc){showStatus("accountStatus","กรุณากรอกแอค X / Twitter ก่อน","err");return}
+  currentAccount=acc;
+  try {
+    const rec=await accountRecordFor(acc);
+    showStatus("accountStatus",`พบประวัติของ @${acc} · LV. ${(rec.stamps||[]).length}`,"ok");
+    await render();
+  } catch(e) {
+    showStatus("accountStatus","เชื่อมต่อฐานข้อมูลไม่สำเร็จ กรุณาตรวจ URL, anon key และ policy","err");
+  }
+});
+$("stampBtn").addEventListener("click",async()=>{
+  hideStatus("uploadStatus");
+  const acc=cleanAccount($("account").value);
+  if(!acc){showStatus("uploadStatus","กรุณากรอกแอค X / Twitter ก่อนอัปโหลด","err");return}
+  currentAccount=acc;
+  const file=$("proof").files[0];
+  if(!file){showStatus("uploadStatus","กรุณาเลือกภาพ Certificate ก่อน","err");return}
+  if(!file.type.startsWith("image/")){showStatus("uploadStatus","ไฟล์นี้ไม่ใช่รูปภาพ","err");return}
+  const btn=$("stampBtn");btn.disabled=true;btn.textContent="กำลังตรวจสอบ…";
+  try{
+    // Decode only in memory. No uploaded proof is written to localStorage or sent to a server.
+    const img=await loadImage(file);
+    showStatus("uploadStatus","กำลังตรวจสอบภาพ…","info");
+    const photoResult = await checkTargetPhotoFast(img);
+    if(photoResult === "uncertain"){
+      const confirmPhoto = window.confirm("ระบบตรวจภาพได้ไม่ชัดเจน\n\nกรุณายืนยันว่าได้โหวต RIIZE ในหมวด FAN’S CHOICE MALE เรียบร้อยแล้ว \n\nกด OK เพื่อดำเนินการต่อ หรือ Cancel เพื่อหยุด");
+      if(!confirmPhoto){
+        showStatus("uploadStatus","ไม่สามารถตรวจสอบได้ กรุณาเลือกภาพ Certificate ที่เห็นชัดเจน","err");
+        return;
+      }
+    } else if(!photoResult){
+      const confirmPhoto = window.confirm("ระบบตรวจภาพได้ไม่ชัดเจน\n\nกรุณายืนยันว่าได้โหวต RIIZE ในหมวด FAN’S CHOICE MALE เรียบร้อยแล้ว \n\nกด OK เพื่อดำเนินการต่อ หรือ Cancel เพื่อหยุด");
+      if(!confirmPhoto){
+        showStatus("uploadStatus","ยกเลิกแล้ว กรุณาเลือกภาพ Certificate ที่เห็นชัดเจน","err");
+        return;
+      }
+    }
+    showStatus("uploadStatus","ตรวจสอบแล้ว กำลังอ่านข้อความวันที่บนใบรับรอง…","info");
+    let ocrText="";
+    if(window.Tesseract){
+      ocrText = await readCertificateDateText(img);
+    } else {
+      showStatus("uploadStatus","โหลดไม่สำเร็จ กรุณาลองใหม่","err");return;
+    }
+    const parsed=kstDayFromText(ocrText);
+    if(!parsed){showStatus("uploadStatus","อ่านวันที่/เวลาใต้ใบรับรองไม่สำเร็จ กรุณาใช้ภาพชัด ๆ ที่เห็นรูปแบบวันที่ เช่น 2026.10.16 22:01","err");return}
+    const targetDate=isoDate(parsed.year,parsed.month,parsed.day);
+    if(!isActivePeriodDate(targetDate)){
+      const cfg=activePeriodConfig();
+      showStatus("uploadStatus",`วันที่ตามเวลาเกาหลีคือ ${eventDateLabel(targetDate)} อยู่นอกช่วง Period ${EVENT_SETTINGS.activePeriod} (${eventDateLabel(cfg.start)}–${eventDateLabel(cfg.end)})`,"err");return;
+    }
+    const backdate=$("backdate").checked;
+    const chosen=backdate?$("chosenDate").value:targetDate;
+    if(!backdate){
+      const today=kstDate();
+      if(!isActivePeriodDate(today)){
+        showStatus("uploadStatus",`วันนี้ตามเวลาเกาหลีคือ ${today} ไม่อยู่ในช่วง Period ${EVENT_SETTINGS.activePeriod} (${eventDateLabel(activePeriodConfig().start)}–${eventDateLabel(activePeriodConfig().end)})`,"err");return;
+      }
+      if(targetDate!==today){
+        showStatus("uploadStatus",`วันที่ตามเวลาเกาหลีคือ ${eventDateLabel(targetDate)} แต่วันนี้คือ ${eventDateLabel(today)} กรุณาใช้โหมดอัปโหลดวันที่ย้อนหลังหากเป็นกรณีตกหล่น`,"err");return;
+      }
+    } else if(chosen!==targetDate){
+      showStatus("uploadStatus",`วันที่บนใบรับรองเป็น ${eventDateLabel(targetDate)} แต่เลือกวันที่รับการ์ดเป็นวันที่ ${eventDateLabel(chosen)} กรุณาเลือกวันที่ให้ตรงกัน`,"err");return;
+    }
+    const already=await accountRecordFor(acc);
+    if((already.stamps||[]).includes(chosen)){showStatus("uploadStatus",`@${acc} รับการ์ดของวันที่ ${eventDateLabel(chosen)} ไปแล้ว ไม่สามารถรับซ้ำในวันเดียวกันได้`,"err");return}
+    const added=await addStamp(acc,chosen);
+    if(!added){showStatus("uploadStatus",`@${acc} รับการ์ดของวันที่ ${eventDateLabel(chosen)} ไปแล้ว ไม่สามารถรับซ้ำในวันเดียวกันได้`,"err");return}
+    let dropped=null;
+    try{dropped=await drawCard(acc,chosen)}catch(cardErr){console.error("Card reward save failed",cardErr)}
+    const rec=await accountRecordFor(acc);
+    showStatus("uploadStatus",`สำเร็จ! @${acc} ได้ LV. ${rec.stamps.length} และ ${dropped?`การ์ด ${dropped.name} · ${dropped.skin}`:"เช็กอินสำเร็จ"} แล้ว!`,"ok");
+    await render();
+    await loadCompleteAccounts();
+    await updatePublicStats();
+    $("accountStatus").textContent=`ประวัติของ @${acc} · สะสมแล้ว ${rec.stamps.length} การ์ด`;
+    $("accountStatus").className="status show ok";
+    $("proof").value="";
+  }catch(err){
+    console.error(err);
+    showStatus("uploadStatus",err.message==="โหลดระบบตรวจภาพไม่สำเร็จ กรุณาลองใหม่"
+      ? err.message
+      : "ตรวจสอบรูปไม่สำเร็จ กรุณาลองอีกครั้ง","err");
+  }finally{btn.disabled=false;btn.textContent="ตรวจสอบและรับการ์ด";}
+});
+function loadImage(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file);const img=new Image();img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("image load failed"))};img.src=url})}
+
+async function readCertificateDateText(img){
+  const regions = [
+    [0, 0, 1, 1],                
+    [0.10, 0.20, 0.80, 0.65],    
+    [0.20, 0.30, 0.70, 0.50],    
+    [0.35, 0.40, 0.60, 0.40]     
+  ];
+  const texts=[];
+  for(const [rx,ry,rw,rh] of regions){
+    const canvas=document.createElement("canvas");
+    const sx=Math.round(img.naturalWidth*rx), sy=Math.round(img.naturalHeight*ry);
+    const sw=Math.max(1,Math.round(img.naturalWidth*rw)), sh=Math.max(1,Math.round(img.naturalHeight*rh));
+   //zoom for checking date
+    const scale=(rx===0&&ry===0&&rw===1&&rh===1)?1:Math.min(3,Math.max(1.5,1400/Math.max(sw,sh)));
+    canvas.width=Math.round(sw*scale); canvas.height=Math.round(sh*scale);
+    const ctx=canvas.getContext("2d");
+    ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality="high";
+    ctx.drawImage(img,sx,sy,sw,sh,0,0,canvas.width,canvas.height);
+    try{
+      const result=await Tesseract.recognize(canvas,"eng",{logger:()=>{}});
+      const text=result.data.text||""; texts.push(text);
+      if(kstDayFromText(text)) return text;
+    }catch(e){ /* try other crop regions */ }
+  }
+  return texts.join("\n");
+}
+
+const TARGET_PHOTO_DATA = "data:image/jpeg;base64,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";
+function drawToHashCanvas(image, x, y, width, height, size = 8) {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  ctx.drawImage(image, x, y, width, height, 0, 0, size, size);
+  const data = ctx.getImageData(0, 0, size, size).data;
+  const gray = [];
+  for (let i = 0; i < data.length; i += 4) {
+    gray.push(0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]);
+  }
+  const mean = gray.reduce((sum, value) => sum + value, 0) / gray.length;
+  return gray.map(value => value >= mean ? 1 : 0);
+}
+function hashDistance(a, b) {
+  let distance = 0;
+  for (let i = 0; i < Math.min(a.length, b.length); i++) if (a[i] !== b[i]) distance++;
+  return distance;
+}
+function getTargetPhoto() {
+  return new Promise((resolve, reject) => {
+    const target = new Image();
+    target.onload = () => resolve(target);
+    target.onerror = () => reject(new Error("โหลดภาพอ้างอิงไม่สำเร็จ"));
+    target.src = TARGET_PHOTO_DATA;
+  });
+}
+async function checkTargetPhotoFast(uploadedImage) {
+  const target = await getTargetPhoto();
+  const targetHash = drawToHashCanvas(target, 0, 0, target.naturalWidth, target.naturalHeight);
+  const sourceCanvas = document.createElement("canvas");
+  const scale = Math.min(1, 1000 / Math.max(uploadedImage.naturalWidth, uploadedImage.naturalHeight));
+  sourceCanvas.width = Math.max(1, Math.round(uploadedImage.naturalWidth * scale));
+  sourceCanvas.height = Math.max(1, Math.round(uploadedImage.naturalHeight * scale));
+  const ctx = sourceCanvas.getContext("2d", { willReadFrequently: true });
+  ctx.drawImage(uploadedImage, 0, 0, sourceCanvas.width, sourceCanvas.height);
+
+  const shortSide = Math.min(sourceCanvas.width, sourceCanvas.height);
+  const scales = [0.09, 0.12, 0.16, 0.21, 0.27, 0.34, 0.43, 0.55, 0.68];
+  let bestDistance = 64;
+  for (const ratio of scales) {
+    const side = Math.max(24, Math.round(shortSide * ratio));
+    const windowW = side;
+    const windowH = Math.max(24, Math.round(side * target.naturalHeight / target.naturalWidth));
+    if (windowW > sourceCanvas.width || windowH > sourceCanvas.height) continue;
+    const stepX = Math.max(5, Math.floor(windowW / 6));
+    const stepY = Math.max(5, Math.floor(windowH / 6));
+    for (let y = 0; y <= sourceCanvas.height - windowH; y += stepY) {
+      for (let x = 0; x <= sourceCanvas.width - windowW; x += stepX) {
+        const candidate = drawToHashCanvas(sourceCanvas, x, y, windowW, windowH);
+        const distance = hashDistance(targetHash, candidate);
+        if (distance < bestDistance) bestDistance = distance;
+        if (bestDistance <= 8) return true; 
+      }
+    }
+  }
+  if (bestDistance <= 18) return "uncertain";
+  return false;
+}
+
+async function downloadCertificate() {
+  if (!currentAccount) {
+    showStatus("accountStatus", "กรุณากรอกแอคแล้วกดดูคอลเลกชันก่อนดาวน์โหลด", "err");
+    return;
+  }
+  try {
+    const rec = await accountRecordFor(currentAccount);
+    const earned = new Set(rec.stamps || []);
+    const records = await ownedCardRecords(currentAccount);
+    const cardById = new Map(CARD_SET.map(c => [c.id, c]));
+    const cardRows = records.map(r => ({...r, card:cardById.get(r.card_id)})).filter(r => r.card && r.card.rank !== "SP");
+    const loaded = {};
+    await Promise.all(cardRows.map(async r => {
+      try {
+        const img = new Image();
+        await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=r.card.file;if(img.complete&&img.naturalWidth)resolve()});
+        loaded[r.card.id]=img;
+      } catch(e) { console.warn("โหลดรูปการ์ดไม่สำเร็จ:",r.card.file,e); }
+    }));
+
+    const canvas=document.createElement("canvas"); canvas.width=1200; canvas.height=1500;
+    const ctx=canvas.getContext("2d"); if(!ctx) throw new Error("ไม่สามารถสร้าง Canvas ได้");
+    const bg=ctx.createLinearGradient(0,0,1200,1500); bg.addColorStop(0,"#fff7d6");bg.addColorStop(.5,"#d9f1ff");bg.addColorStop(1,"#e4ffd9");ctx.fillStyle=bg;ctx.fillRect(0,0,1200,1500);
+    // Mario-inspired arcade frame
+    ctx.fillStyle="#e63946";ctx.beginPath();ctx.roundRect(24,24,1152,1452,34);ctx.fill();
+    ctx.fillStyle="#ffdf4d";ctx.beginPath();ctx.roundRect(42,42,1116,1416,26);ctx.fill();
+    ctx.fillStyle="#fffdf4";ctx.beginPath();ctx.roundRect(58,58,1084,1384,20);ctx.fill();
+    ctx.textAlign="center";ctx.fillStyle="#e63946";ctx.font="900 30px system-ui";ctx.fillText("★ WE VOTE RIIZE · DAILY CARD COLLECTION ★",600,112);
+    ctx.fillStyle="#164e9a";ctx.font="900 48px system-ui";ctx.fillText("2026 MAMA FAN’S CHOICE",600,172);
+    ctx.fillStyle="#fff1a8";ctx.beginPath();ctx.roundRect(250,194,700,68,22);ctx.fill();ctx.strokeStyle="#164e9a";ctx.lineWidth=4;ctx.stroke();
+    const accountName="@"+currentAccount;let fs=38;ctx.font=`900 ${fs}px system-ui`;while(ctx.measureText(accountName).width>640&&fs>20){fs-=2;ctx.font=`900 ${fs}px system-ui`};ctx.fillStyle="#164e9a";ctx.fillText(accountName,600,239);
+    ctx.fillStyle="#333";ctx.font="bold 23px system-ui";ctx.fillText(`LV. ${earned.size}/${DAYS.length}  ·  ${cardRows.length} CARDS COLLECTED`,600,305);
+    // List each card with the day it was awarded. Cards from before date tracking are marked as date unknown.
+    const displayRows=[...cardRows].sort((a,b)=>(a.awarded_date||"9999").localeCompare(b.awarded_date||"9999"));
+    const cols=6, cardW=155, cardH=250, gapX=20, gapY=18, gridW=cols*cardW+(cols-1)*gapX, startX=(1200-gridW)/2, startY=340;
+    displayRows.slice(0,24).forEach((r,i)=>{
+      const col=i%cols,row=Math.floor(i/cols),x=startX+col*(cardW+gapX),y=startY+row*(cardH+gapY);
+      ctx.fillStyle="#164e9a";ctx.beginPath();ctx.roundRect(x-4,y-4,cardW+8,cardH+8,12);ctx.fill();
+      ctx.fillStyle="#fff";ctx.beginPath();ctx.roundRect(x,y,cardW,cardH,9);ctx.fill();
+      const img=loaded[r.card.id];
+      if(img){const pad=5, maxW=cardW-2*pad,maxH=cardH-34,scale=Math.min(maxW/img.naturalWidth,maxH/img.naturalHeight),w=img.naturalWidth*scale,h=img.naturalHeight*scale;ctx.drawImage(img,x+(cardW-w)/2,y+5,w,h)}
+      else {ctx.fillStyle="#dbeafe";ctx.fillRect(x+5,y+5,cardW-10,cardH-40);ctx.fillStyle="#164e9a";ctx.font="bold 18px system-ui";ctx.fillText(r.card.name,x+cardW/2,y+cardH/2)}
+      ctx.fillStyle="#ffdf4d";ctx.fillRect(x+4,y+cardH-31,cardW-8,26);
+      ctx.fillStyle="#17324d";ctx.font="bold 15px system-ui";ctx.fillText(r.awarded_date?`${Number(r.awarded_date.slice(-2))}/10 · ${r.card.rank}`:`${r.card.rank} · CARD`,x+cardW/2,y+cardH-13);
+    });
+    if(!displayRows.length){ctx.fillStyle="#555";ctx.font="bold 26px system-ui";ctx.fillText("ยังไม่มีการ์ดที่ได้รับ",600,650)}
+    ctx.fillStyle="#164e9a";ctx.font="bold 18px system-ui";ctx.fillText("DAILY REWARDS · COLLECT THEM ALL!",600,1410);
+    const link=document.createElement("a");link.download=`we-vote-riize-card-collection-${currentAccount}.png`;link.href=canvas.toDataURL("image/png");document.body.appendChild(link);link.click();link.remove();
+  } catch(error) {
+    console.error("Card collection download error:",error);
+    showStatus("accountStatus","ดาวน์โหลดการ์ดสะสมไม่สำเร็จ กรุณาลองอีกครั้ง","err");
+  }
+}
+
+$("downloadBtn").addEventListener("click",downloadCertificate);
+$("clearInputBtn").addEventListener("click",()=>{$("proof").value="";hideStatus("uploadStatus")});
+setupDates();
+if(!DB_CONFIGURED) {
+  showStatus("accountStatus","ยังไม่ได้เชื่อมต่อฐานข้อมูลกลาง จะแสดงข้อมูลเฉพาะเบราว์เซอร์นี้จนกว่าจะตั้งค่า Supabase","info");
+}
+render();
+loadCompleteAccounts();
+updatePublicStats();
+renderLockedCards();
+  </script>
+ </body>
+</html>
