@@ -1,1 +1,0 @@
-# MAMA-stamp-round1
