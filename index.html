@@ -1673,22 +1673,12 @@ async function drawCard(account,day){
  await saveOwnedCard(account,card.id,day);
  return card;
 }
-async function accountHasCompletedAllDays(account){
- if(!account) return false;
- try {
-  const rec=await accountRecordFor(account);
-  const validDates=new Set(allEventDates());
-  const stamped=new Set((rec.stamps||[]).map(value=>String(value).slice(0,10)).filter(date=>validDates.has(date)));
-  return stamped.size>=validDates.size;
- } catch(error) {
-  console.error("Could not verify full event completion:",error);
-  return false;
- }
-}
 async function renderLockedCards(account=currentAccount){
  const el=$("lockedCards");if(!el)return;
  const ids=account?await ownedCardIds(account):[];
- const fullyCompleted=await accountHasCompletedAllDays(account);
+ let stampCount=0;
+ if(account){try{const rec=await accountRecordFor(account);stampCount=new Set(rec.stamps||[]).size;}catch(e){stampCount=0;}}
+ const fullyCompleted=Boolean(account) && stampCount>=allEventDates().length;
  const specialCards=CARD_SET.filter(c=>c.rank==="SR"||c.rank==="SSR");
  const palettes={SHOTARO:['#f7a3c5','#ffe2ef','#ffd5a7'],EUNSEOK:['#f4d75e','#fff4b8','#ffe7a8'],SUNGCHAN:['#72b7ff','#d7efff','#d8ddff'],WONBIN:['#a887f0','#eee1ff','#d7dfff'],SOHEE:['#e45b65','#ffd9dc','#ffe6cf'],ANTON:['#34c89a','#d8fff0','#d6f5e9']};
  const marks={SHOTARO:'♡',EUNSEOK:'♥',SUNGCHAN:'⚡',WONBIN:'💗',SOHEE:'♡',ANTON:'ϟ'};
@@ -1711,9 +1701,8 @@ async function renderCards(account){
  if(account){
   try{
    const rec=await accountRecordFor(account);
-   const validDates=new Set(allEventDates());
-   level=new Set((rec.stamps||[]).map(value=>String(value).slice(0,10)).filter(date=>validDates.has(date))).size;
-  }catch(e){ console.error("Could not load account stamps:",e); level=0; }
+   level=new Set((rec.stamps||[]).map(date=>String(date).slice(0,10))).size;
+  }catch(e){ level=0; }
  }
  
  const fullyCompleted=Boolean(account) && level>=allEventDates().length;
