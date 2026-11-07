@@ -217,7 +217,6 @@ body {
   z-index:1
 }
 
-/* Stamp PNGs: same size and centered in every stamp circle */
 .stamp img {
   display: block;
   width: 72%;
@@ -264,6 +263,7 @@ body {
   background:#fff1f7;
   border-radius:999px;
   padding:8px 12px;
+  transform: translateY(-8px);
   color:#a02f62
 }
 
@@ -515,6 +515,34 @@ input[type="file"] {
 
 }
 
+.collection-heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 10px;
+  row-gap: 4px;
+  margin: 24px 0 12px;
+  line-height: 1.2;
+  min-width: 0;
+}
+.collection-title {
+  color: #8969df;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  line-height: 1.2;
+}
+.collection-period {
+  color: #53677d;
+  font-size: clamp(14px, 1.8vw, 17px);
+  font-weight: 700;
+  line-height: 1.35;
+}
+@media (max-width: 520px) {
+  .collection-heading { column-gap: 7px; }
+  .collection-title { font-size: 22px; }
+  .collection-period { font-size: 13px; }
+}
+
 .complete-list {
   display:flex;
   flex-direction:column;
@@ -551,8 +579,6 @@ input[type="file"] {
   font-size:11px
 }
 
-/* Orange / white / black visual refresh;
-  stamp artwork remains pastel */
 :root {
   --ink:#171717;
   --muted:#66615d;
@@ -734,7 +760,7 @@ input[type=file] {
   
 /* css */
 .hero h1{font-family:"Press Start 2P",monospace;font-size:clamp(19px,4vw,34px);color:#c5a5ff;text-shadow:3px 3px #563c89;line-height:1.65}
-.hero-sub,.hero-pill{color:#d7d0ef!important}
+.hero-sub,.hero-pill{color:#d7d0ef!important;font-family:"Press Start 2P",monospace!important;font-size:10px!important;line-height:1.8!important}
 .hero-pill{display:inline-block;margin-top:14px;padding:9px 14px;border:1px solid #9e7aff;border-radius:6px;background:#8e62ff22;font-family:"Press Start 2P",monospace;font-size:10px}
 .howto{background:#1b1a29!important;border:1px solid #3a3450!important;color:#f7f4ff!important;border-radius:18px}
 .howto p,.howto-note{color:#c5bfd8!important}
@@ -821,7 +847,14 @@ body {
   font-size: 10px;
 }
 
-/* Panels and instructions */
+
+.game-card,.game-card.owned,.game-card.missing{box-shadow:none!important;}
+.game-card,.game-card.owned,.game-card.missing{box-shadow:none!important;filter:none!important;}
+.game-card::before,.game-card::after,.game-card .art-stage::before,.game-card .art-stage::after{content:none!important;display:none!important;}
+.game-card.thunder-heart .rank-label,.game-card.love-voltage .rank-label{box-shadow:none!important;text-shadow:none!important;}
+.game-card.thunder-heart .character-mark,.game-card.love-voltage .character-mark{ text-shadow:none!important; }
+
+
 .panel,
 .howto {
   color: var(--ink) !important;
@@ -936,7 +969,7 @@ input[type='file'] {
 }
 .stat-box:nth-child(3n + 1) { background: var(--pink) !important; color: #fff !important; }
 .stat-box:nth-child(3n + 2) { background: var(--blue) !important; color: #fff !important; }
-.stat-box:nth-child(3n) { background: var(--yellow) !important; color: var(--ink) !important; }
+.stat-box:nth-child(3n) { background: #16a34a !important; color: #fff !important; }
 
 .stat-box .num {
   display: block;
@@ -974,12 +1007,17 @@ input[type='file'] {
 
 /* Calendar */
 .calendar {
-  display: grid;
+  display: block;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 7px;
   margin-top: 14px;
 }
 
+.calendar-month { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:7px; margin-top:14px; }
+.cal-day.period-1:not(.earned) { background:#fff0f6 !important; border-color:#ed8bb5 !important; }
+.cal-day.period-2:not(.earned) { background:#eef5ff !important; border-color:#75a9f5 !important; }
+.cal-day.period-1.earned { background:#e78bb8 !important; border-color:#a83d75 !important; }
+.cal-day.period-2.earned { background:#75a9f5 !important; border-color:#285eae !important; }
 .cal-month-title {
   grid-column: 1 / -1;
   color: var(--ink);
@@ -1012,7 +1050,7 @@ input[type='file'] {
   border-radius: 7px !important;
 }
 .cal-day .day-num { font-size: 15px; font-weight: 800; }
-.cal-day .day-status { color: #53677d !important; font-size: 10px; letter-spacing: .04em; }
+.cal-day .day-status { color: #53677d !important; font-size: 10px; letter-spacing: .02em; max-width:100%; width:100%; white-space:normal; overflow-wrap:anywhere; word-break:break-word; line-height:1.2; }
 .cal-day.earned {
   background: var(--mint) !important;
   color: #fff !important;
@@ -1031,6 +1069,10 @@ input[type='file'] {
 
 .game-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
   overflow: hidden;
   background: #fffdf3 !important;
   border: 3px solid var(--ink) !important;
@@ -1050,6 +1092,8 @@ input[type='file'] {
   justify-content: center;
   overflow: hidden;
   aspect-ratio: 2 / 3;
+  flex: 1 1 auto;
+  min-height: 0;
   background: linear-gradient(135deg, #b9ecff, #fff3b4) !important;
 }
 .game-card .art-stage::before {
@@ -1079,14 +1123,21 @@ input[type='file'] {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 9px;
-  padding: 12px;
+  padding: 13% 12px 12px;
   color: var(--ink);
   text-align: center;
 }
 .card-fallback .rank-label {
-  padding: 8px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 116px;
+  min-height: 42px;
+  flex: 0 0 42px;
+  padding: 6px;
   background: #fff;
   border: 2px solid var(--ink);
   border-radius: 5px;
@@ -1094,15 +1145,33 @@ input[type='file'] {
   font: 10px 'Press Start 2P', monospace;
 }
 .card-fallback .character-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: clamp(54px, 7vw, 76px);
+  flex: 0 0 clamp(54px, 7vw, 76px);
   font-size: clamp(38px, 6vw, 64px);
+  line-height: 1;
   filter: drop-shadow(2px 3px #ffffffb0);
 }
 .card-fallback .placeholder-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 28px;
+  flex: 0 0 28px;
   font: clamp(9px, 1.2vw, 13px) 'Press Start 2P', monospace;
-  line-height: 1.8;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 .card-fallback .skin-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  box-sizing: border-box;
   padding: 5px 8px;
   background: #fff;
   border-radius: 4px;
@@ -1113,16 +1182,20 @@ input[type='file'] {
 .game-card .card-meta {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 6px;
-  padding: 9px 10px 5px;
+  min-height: 38px;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  text-align: center;
   background: #fffdf3 !important;
   color: var(--ink) !important;
   font-size: 12px;
   font-weight: 700;
 }
-.game-card .rarity { color: var(--pink) !important; font-size: 9px !important; }
+.game-card .rarity { color: var(--pink) !important; font-size: 9px !important; text-align: center; width: 100%; }
 .effect-strip {
+  display:none!important;
   padding: 9px;
   background: var(--yellow) !important;
   color: var(--ink) !important;
@@ -1188,6 +1261,11 @@ input[type='file'] {
 .empty { color: #53677d; }
 .count { background: var(--yellow); color: var(--ink); border: 2px solid var(--ink); }
 
+.complete-list { display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.complete-list .collector { display:flex; align-items:center; justify-content:space-between; gap:6px; min-width:0; padding:10px; font-size:12px; overflow-wrap:anywhere; }
+.complete-list .collector-no { display:none !important; }
+.complete-list .collector-badge { flex-shrink:0; white-space:nowrap; font-size:10px; padding:4px 6px; }
+@media(max-width:650px){.complete-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.complete-list .collector{padding:8px 5px;font-size:10px;flex-wrap:wrap}.complete-list .collector-badge{font-size:9px}}
 /* Collector list and footer */
 .collector,
 .complete-list .collector {
@@ -1221,11 +1299,12 @@ footer,
   .effect-strip { font-size: 10px; }
   .card-fallback .placeholder-name { font-size: 9px; }
   .cal-day { min-height: 58px; padding: 5px; }
-  .cal-day .day-status { font-size: 9px; }
+  .cal-day .day-status { font-size: clamp(7px, 2.2vw, 9px); letter-spacing:0; max-width:100%; overflow-wrap:anywhere; word-break:break-word; }
+  .cal-day { min-width:0; overflow:hidden; }
 }
 
 
-/* EVENT DATE — single authoritative Mario-style rule */
+/* EVENT DATE */
 .event-datetime {
   display: inline-block !important;
   margin: 14px 8px 10px !important;
@@ -1245,6 +1324,21 @@ footer,
   max-width: 100%;
   overflow-wrap: anywhere;
 }
+/* Desktop: keep the date badge compact; mobile sizing remains unchanged */
+@media (min-width: 601px) {
+  .event-datetime {
+    display: inline-block !important;
+    width: fit-content !important;
+    max-width: min(850px, calc(100% - 32px)) !important;
+    box-sizing: border-box !important;
+    font-size: 10px !important;
+    padding: 10px 14px !important;
+    margin: 10px 6px 8px !important;
+    line-height: 1.7 !important;
+    overflow-wrap: anywhere;
+  }
+}
+
 @media (max-width: 600px) {
   .event-datetime {
     font-size: clamp(7px, 2.1vw, 10px) !important;
@@ -1264,7 +1358,7 @@ footer,
      2026 MAMA FAN’S CHOICE
     </p>
     <p class="event-datetime">
-     2026.10.12 19:00 - 10.22 23:59 (KST)
+     October 28, 2026, at 6:00 PM KST to November 8, 2026, at 11:59 PM KST
     </p>
     <div class="hero-pill">
      Vote for collecting cards
@@ -1275,10 +1369,10 @@ footer,
     <div class="stat-box"><span class="num" id="todayVotes">—</span><span class="label">Votes today · KST</span></div>
     <div class="stat-box"><span class="num" id="totalVotes">—</span><span class="label">Total check-ins</span></div>
    </section>
-   <section class="panel game-bar"><div><div class="hint" id="periodActiveLabel">PERIOD 01 · ACTIVE MISSION · 12/10/2026–22/10/2026</div><h2 style="margin:8px 0 0">CHECK-IN EVENT</h2><div class="hint">CHECK-IN CALENDAR · KST</div></div><span class="level-chip">CARD DROP WHEN LV.UP</span></section>
+   <section class="panel game-bar"><div><div class="hint" id="periodActiveLabel">PERIOD 01 · ACTIVE MISSION · 12/10/2026–22/10/2026</div><h2 style="margin:8px 0 0">CHECK-IN EVENT</h2></div><span class="level-chip">CARD DROP WHEN LV.UP</span></section>
    <section class="howto">
     <div class="howto-title">
-     วิธีใช้งาน / HOW TO COLLECT CARDS
+    HOW TO COLLECT CARDS
     </div>
     <div class="steps">
      <div class="step">
@@ -1343,16 +1437,14 @@ footer,
    </section>
    <section class="panel">
     <h2>
-     🧡 Your account
+     Your account
     </h2>
     <div class="field">
      <label for="account">
       X / Twitter account
      </label>
      <input autocomplete="off" id="account" maxlength="80" placeholder="@youraccount"/>
-     <div class="hint">
-      กรอกแอคเดิมเพื่อเปิดดูประวัติการ์ดที่สะสมไว้
-     </div>
+     
     </div>
     <div class="actions">
      <button class="btn primary" id="loadBtn">
@@ -1364,7 +1456,7 @@ footer,
    </section>
    <section class="panel">
     <h2>
-     🩵 Upload to collect a card
+     Upload to collect a card
     </h2>
     <div class="field">
      <label for="proof">
@@ -1377,9 +1469,6 @@ footer,
       <input id="backdate" style="width:auto;vertical-align:middle" type="checkbox"/>
       ต้องการอัปโหลดหลักฐานเพื่อรับการ์ดของวันย้อนหลัง
      </label>
-     <div class="hint">
-      เลือกวันที่ต้องการรับการ์ด
-     </div>
     </div>
     <div class="field hidden" id="dateField">
      <label for="chosenDate">
@@ -1399,39 +1488,34 @@ footer,
    <section class="panel">
     <div class="certificate-head">
      <h2>
-      🗓 CHECK-IN CALENDAR
+      CHECK-IN CALENDAR
      </h2>
      <span class="count" id="count">
-      LV. 0 / 22
+      LV. 0 / 23
      </span>
     </div>
     <div class="calendar" id="stampGrid"></div>
-    <div class="game-bar" style="margin-top:16px"><span class="hint">เช็กอินสำเร็จ +1 LV. รับการ์ด 1 ใบ · LV.22 รับการ์ดครบทั้งหมด</span><span class="level-chip" id="levelChip">LV. 0</span></div>
-    <h3 style="color:#8969df;margin-top:24px">CARD COLLECTION <span class="hint" style="font-size:12px">· PERIOD 01: C + R / PERIOD 02: UNOWNED + SR</span></h3>
-    <div class="cards-grid" id="myCards"><div class="empty">กรอกแอคแล้วกดดูคอลเลกชันเพื่อดูการ์ดทั้ง 24 แบบ</div></div>
-    <h3 style="color:#8969df;margin-top:24px">PERIOD 02 · SR + UNOWNED CARDS · SWITCH IN EVENT_SETTINGS</h3>
-    <div class="cards-grid" id="lockedCards"></div>
-    <div class="actions">
-     <button class="btn primary" id="downloadBtn">
-      ดาวน์โหลด Card collection
-     </button>
-     <button class="btn secondary" id="clearInputBtn">
-      ล้างช่องอัปโหลด
-     </button>
+    <div class="game-bar" style="margin-top:16px"><span class="hint">เช็กอินสำเร็จ +1 LV. รับการ์ด 1 ใบ</span><span class="level-chip" id="levelChip">LV. 0</span></div>
+    <h3 class="collection-heading">
+      <span class="collection-title">CARD COLLECTION</span>
+      <span class="collection-period">· PERIOD 01 · C + R</span>
+    </h3>
+    <div class="cards-grid" id="myCards"><div class="empty">กรอกแอคแล้วกดดูคอลเลกชันการ์ด</div></div>
+    <div class="cards-grid" id="lockedCards" hidden></div>
+    <div class="actions" style="flex-wrap:wrap">
+     <button class="btn primary" id="downloadPeriod1Btn" type="button">ดาวน์โหลด Card Collection · PERIOD 1</button>
+     <button class="btn primary" id="downloadPeriod2Btn" type="button">ดาวน์โหลด Card Collection · PERIOD 2</button>
     </div>
    </section>
    <section class="panel">
     <div class="certificate-head">
      <h2>
-      🏆 TOP PLAYER · HIGHEST LEVEL
+      TOP PLAYER · HIGHEST LEVEL
      </h2>
      <span class="count" id="completeCount">
       TOP LV. —
      </span>
     </div>
-    <p class="hint" id="completeHint">
-     แสดงแอคที่มีเลเวลสูงสุดจากจำนวนวันเช็กอินสำเร็จ
-    </p>
     <div class="complete-list" id="completeList">
      <div class="empty">
       กำลังโหลดรายชื่อ…
@@ -1449,7 +1533,7 @@ footer,
   <script>
 // ===== EVENT SETTINGS: period =====
 const EVENT_SETTINGS = {
-  activePeriod: 1, // 1 or 2
+  activePeriod: 2, // 1 or 2
   periods: {
     1: {
       start: "2026-10-12", end: "2026-10-22",
@@ -1457,28 +1541,30 @@ const EVENT_SETTINGS = {
       title: "PERIOD 01 · ACTIVE MISSION"
     },
     2: {
-      start: "2026-10-26", end: "2026-11-05",
-      startTime: "00:00", endTime: "23:59", timezone: "KST",
-      title: "PERIOD 02 · SR + UNOWNED CARDS"
+      start: "2026-10-28", end: "2026-11-08",
+      startTime: "18:00", endTime: "23:59", timezone: "KST",
+      title: "PERIOD 02 · ACTIVE MISSION"
     }
   }
 };
 function activePeriodConfig(){ return EVENT_SETTINGS.periods[EVENT_SETTINGS.activePeriod] || EVENT_SETTINGS.periods[1]; }
+function allPeriodDatesCount(cfg){let n=0;for(let t=Date.parse(cfg.start+"T00:00:00Z");t<=Date.parse(cfg.end+"T00:00:00Z");t+=86400000)n++;return n;}
 function renderEventDate(){
   const el = document.querySelector(".event-datetime");
   const cfg = activePeriodConfig();
   if(!el || !cfg) return;
   const fmt = (iso) => {
-    const [y,m,d] = iso.split("-");
-    return `${y}.${m}.${d}`;
+    const [y,m,d] = iso.split("-").map(Number);
+    return `${String(d).padStart(2,"0")}/${String(m).padStart(2,"0")}/${y}`;
   };
-  el.textContent = `${fmt(cfg.start)} ${cfg.startTime} - ${fmt(cfg.end)} ${cfg.endTime} (${cfg.timezone || "KST"})`;
+  el.textContent = `${fmt(cfg.start)} ${cfg.startTime} - ${String(Number(cfg.end.slice(8,10)))}/${String(Number(cfg.end.slice(5,7)))}/${cfg.end.slice(0,4)} ${cfg.endTime} (${cfg.timezone})`;
 }
 renderEventDate();
 function dateParts(iso){ const [year,month,day]=iso.split("-").map(Number); return {year,month,day}; }
 function isoDate(year,month,day){ return `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`; }
 function eventDateLabel(iso){ const d=dateParts(iso); return `${d.day}/${d.month}/${d.year}`; }
 function eventDates(){ const cfg=activePeriodConfig(),out=[]; for(let t=Date.parse(cfg.start+"T00:00:00Z");t<=Date.parse(cfg.end+"T00:00:00Z");t+=86400000) out.push(new Date(t).toISOString().slice(0,10)); return out; }
+function allEventDates(){ return Object.values(EVENT_SETTINGS.periods).flatMap(cfg=>{const out=[];for(let t=Date.parse(cfg.start+"T00:00:00Z");t<=Date.parse(cfg.end+"T00:00:00Z");t+=86400000)out.push(new Date(t).toISOString().slice(0,10));return out;}); }
 function isActivePeriodDate(iso){ const cfg=activePeriodConfig(); return iso>=cfg.start && iso<=cfg.end; }
 
 const DAYS = [
@@ -1496,39 +1582,63 @@ const DAYS = [
 ];
 const $ = id => document.getElementById(id);
 const CARD_SET = [
- {id:"shotaro-c",name:"SHOTARO",rank:"C",skin:"CHARACTER",file:"images/shotaro-c.png",effect:"RHYTHM SUPPORT"},
- {id:"eunseok-c",name:"EUNSEOK",rank:"C",skin:"CHARACTER",file:"images/eunseok-c.png",effect:"TACTICAL LEADER"},
- {id:"sungchan-c",name:"SUNGCHAN",rank:"C",skin:"CHARACTER",file:"images/sungchan-c.png",effect:"IRON GUARDIAN"},
- {id:"wonbin-c",name:"WONBIN",rank:"C",skin:"CHARACTER",file:"images/wonbin-c.png",effect:"TRICKSTER"},
- {id:"sohee-c",name:"SOHEE",rank:"C",skin:"CHARACTER",file:"images/sohee-c.png",effect:"FEARLESS ACE"},
- {id:"anton-c",name:"ANTON",rank:"C",skin:"CHARACTER",file:"images/anton-c.png",effect:"MIND ARCHITECT"},
+ {id:"shotaro-c",name:"SHOTARO",rank:"C",skin:"CHARACTER",file:"images/shotaro-c.webp",effect:"RHYTHM SUPPORT"},
+ {id:"eunseok-c",name:"EUNSEOK",rank:"C",skin:"CHARACTER",file:"images/eunseok-c.webp",effect:"TACTICAL LEADER"},
+ {id:"sungchan-c",name:"SUNGCHAN",rank:"C",skin:"CHARACTER",file:"images/sungchan-c.webp",effect:"IRON GUARDIAN"},
+ {id:"wonbin-c",name:"WONBIN",rank:"C",skin:"CHARACTER",file:"images/wonbin-c.webp",effect:"TRICKSTER"},
+ {id:"sohee-c",name:"SOHEE",rank:"C",skin:"CHARACTER",file:"images/sohee-c.webp",effect:"FEARLESS ACE"},
+ {id:"anton-c",name:"ANTON",rank:"C",skin:"CHARACTER",file:"images/anton-c.webp",effect:"MIND ARCHITECT"},
  ...["SHOTARO","EUNSEOK","SUNGCHAN","WONBIN","SOHEE","ANTON"].flatMap((n,i)=>[
-  {id:n.toLowerCase()+"-cool",name:n,rank:"R",skin:"COOL",file:`images/${n.toLowerCase()}-r-cool.png`,effect:["+100 ATK SPD","+100 ACCURACY","+100 ATK","+100 CRIT RATE","+100 CRIT DMG","+100 STRATEGY"][i]},
-  {id:n.toLowerCase()+"-cute",name:n,rank:"R",skin:"CUTE",file:`images/${n.toLowerCase()}-r-cute.png`,effect:["+100 TEAM SPD","+100 LUCK","+100 SHIELD","+100 EVADE","+100 HP RECOVERY","+100 SKILL RATE"][i]}
+  {id:n.toLowerCase()+"-cool",name:n,rank:"R",skin:"COOL",file:`images/${n.toLowerCase()}-r-cool.webp`,effect:["+100 ATK SPD","+100 ACCURACY","+100 ATK","+100 CRIT RATE","+100 CRIT DMG","+100 STRATEGY"][i]},
+  {id:n.toLowerCase()+"-cute",name:n,rank:"R",skin:"CUTE",file:`images/${n.toLowerCase()}-r-cute.webp`,effect:["+100 TEAM SPD","+100 LUCK","+100 SHIELD","+100 EVADE","+100 HP RECOVERY","+100 SKILL RATE"][i]}
  ]),
- ...["SHOTARO","EUNSEOK","SUNGCHAN","WONBIN","SOHEE","ANTON"].map((n,i)=>({id:n.toLowerCase()+"-sr",name:n,rank:"SR",skin:"PROJECT X",file:`images/${n.toLowerCase()}-sr.png`,effect:["+200 TEAM SPD","+200 COMMAND","+200 DEF","+200 CRIT RATE","+200 ATK","+200 DEBUFF RES"][i]}))
+ ...["SHOTARO","EUNSEOK","SUNGCHAN","WONBIN","SOHEE","ANTON"].map((n,i)=>({id:n.toLowerCase()+"-sr",name:n,rank:"SR",skin:"LOVE LAB",file:`images/${n.toLowerCase()}-sr.webp`,effect:["+200 TEAM SPD","+200 COMMAND","+200 DEF","+200 CRIT RATE","+200 ATK","+200 DEBUFF RES"][i]})),
+ ...["SHOTARO","EUNSEOK","SUNGCHAN","WONBIN","SOHEE","ANTON"].map((n,i)=>({id:n.toLowerCase()+"-ssr",name:n,rank:"SSR",skin:"INSOMNIA",file:`images/${n.toLowerCase()}-ssr.webp`,effect:["+300 TEAM SPD","+300 COMMAND","+300 DEF","+300 CRIT RATE","+300 ATK","+300 DEBUFF RES"][i]}))
 ];
 const PERIOD2_LOCKED = [];
 function localCardKey(account){return `we_vote_riize_cards_${account}`}
 function localCards(account){try{return JSON.parse(localStorage.getItem(localCardKey(account))||"[]")}catch{return []}}
 function saveLocalCards(account,ids){localStorage.setItem(localCardKey(account),JSON.stringify([...new Set(ids)]))}
 function localCardRecords(account){try{return JSON.parse(localStorage.getItem(`we_vote_riize_card_records_${account}`)||"[]")}catch{return []}}
-function periodLabel(){return `Period ${EVENT_SETTINGS.activePeriod}`}
+function periodForDate(day){
+ const iso=String(day||"").slice(0,10);
+ for(const [number,cfg] of Object.entries(EVENT_SETTINGS.periods)){
+  if(iso>=cfg.start && iso<=cfg.end) return Number(number);
+ }
+ return EVENT_SETTINGS.activePeriod;
+}
+function periodLabel(day){return `Period ${periodForDate(day)}`}
+function recordPeriod(r){
+ const day=String(r?.acquired_date||"").slice(0,10);
+ if(/^\d{4}-\d{2}-\d{2}$/.test(day)){
+  const found=periodForDate(day);
+  if(Object.values(EVENT_SETTINGS.periods).some(cfg=>day>=cfg.start&&day<=cfg.end)) return found;
+ }
+ return Number(String(r?.period||"").replace(/\D/g,"")) || null;
+}
+function clearLocalCardCache(account){
+
+ try{
+  localStorage.removeItem(localCardKey(account));
+  localStorage.removeItem(`we_vote_riize_card_records_${account}`);
+ }catch(e){ console.warn("Could not clear local card cache",e); }
+}
 async function ownedCardIds(account){
  if(!DB_CONFIGURED)return localCards(account);
  const rows=await dbRequest(`card_records?select=card_id&account=eq.${encodeURIComponent(account)}`);
+ clearLocalCardCache(account);
  return rows.map(r=>r.card_id);
 }
 async function saveOwnedCard(account,cardId,day){
- const period=periodLabel();
+ const period=periodLabel(day);
  if(!DB_CONFIGURED){
   const ids=localCards(account);if(!ids.includes(cardId)){ids.push(cardId);saveLocalCards(account,ids)}
   const records=localCardRecords(account);
-  if(!records.some(r=>r.card_id===cardId)){records.push({card_id:cardId,period,created_at:new Date().toISOString()});localStorage.setItem(`we_vote_riize_card_records_${account}`,JSON.stringify(records))}
+  if(!records.some(r=>r.card_id===cardId)){records.push({card_id:cardId,period,acquired_date:day,created_at:new Date().toISOString()});localStorage.setItem(`we_vote_riize_card_records_${account}`,JSON.stringify(records))}
   return;
  }
  try{
-  await dbRequest("card_records",{method:"POST",body:JSON.stringify({account,card_id:cardId,period})});
+  await dbRequest("card_records",{method:"POST",body:JSON.stringify({account,card_id:cardId,period,acquired_date:day})});
  }catch(e){
   const message=String(e.message);
   if(message.includes("23505")||message.toLowerCase().includes("duplicate")||message.toLowerCase().includes("unique"))return;
@@ -1540,55 +1650,90 @@ async function ownedCardRecords(account){
   const records=localCardRecords(account);const known=new Set(records.map(r=>r.card_id));
   return [...records,...localCards(account).filter(id=>!known.has(id)).map(card_id=>({card_id,period:null,created_at:null}))];
  }
- return await dbRequest(`card_records?select=card_id,period,created_at&account=eq.${encodeURIComponent(account)}&order=created_at.asc`);
+ const rows=await dbRequest(`card_records?select=card_id,period,created_at,acquired_date&account=eq.${encodeURIComponent(account)}&order=acquired_date.asc.nullsfirst,created_at.asc`);
+ clearLocalCardCache(account);
+ return rows;
 }
 async function drawCard(account,day){
  const owned=await ownedCardIds(account);
- // Period 1: C/R only. Period 2: any card not owned yet, including all new SR cards.
- const available=CARD_SET.filter(c=>!owned.includes(c.id) && (EVENT_SETTINGS.activePeriod===2 || c.rank!=="SR"));
+ const rewardPeriod=periodForDate(day);
+ const available=CARD_SET.filter(c=>!owned.includes(c.id) && (rewardPeriod===2 || (c.rank!=="SR"&&c.rank!=="SSR")));
  if(!available.length)return null;
  let card;
- if(EVENT_SETTINGS.activePeriod===2){
-   card=available[Math.floor(Math.random()*available.length)];
- } else {
-   const tiers=[{rank:"C",weight:70},{rank:"R",weight:30}]
-    .map(t=>({...t,cards:available.filter(c=>c.rank===t.rank)})).filter(t=>t.cards.length);
-   const totalWeight=tiers.reduce((sum,t)=>sum+t.weight,0);
-   let roll=Math.random()*totalWeight; let chosenTier=tiers[tiers.length-1];
-   for(const tier of tiers){roll-=tier.weight;if(roll<0){chosenTier=tier;break}}
-   card=chosenTier.cards[Math.floor(Math.random()*chosenTier.cards.length)];
- }
+ const tiers=(rewardPeriod===2
+   ? [{rank:"C",weight:40},{rank:"R",weight:30},{rank:"SR",weight:20},{rank:"SSR",weight:10}]
+   : [{rank:"C",weight:70},{rank:"R",weight:30}])
+   .map(t=>({...t,cards:available.filter(c=>c.rank===t.rank)}))
+   .filter(t=>t.cards.length>0);
+ const totalWeight=tiers.reduce((sum,t)=>sum+t.weight,0);
+ let roll=Math.random()*totalWeight;
+ let chosenTier=tiers[tiers.length-1];
+ for(const tier of tiers){roll-=tier.weight;if(roll<0){chosenTier=tier;break}}
+ card=chosenTier.cards[Math.floor(Math.random()*chosenTier.cards.length)];
  await saveOwnedCard(account,card.id,day);
  return card;
 }
-function renderLockedCards(){
+async function renderLockedCards(account=currentAccount){
  const el=$("lockedCards");if(!el)return;
- if(EVENT_SETTINGS.activePeriod===2){el.innerHTML='<div class="empty">PERIOD 2 เปิดแล้ว · การ์ดที่ยังไม่ได้รับจะสุ่มรวมกับ SR เมื่อเช็กอินสำเร็จ</div>';return}
- const period2Cards=CARD_SET.filter(c=>c.rank==="SR");
- el.innerHTML=period2Cards.map(c=>`<article class="game-card missing project-x"><div class="art-stage"><div class="card-fallback"><span class="rank-label">RANK SR</span><span class="character-mark">✧</span><strong class="placeholder-name">${c.name}</strong><span class="skin-label">PROJECT X · PERIOD 02</span></div></div><div class="card-meta"><b>${c.name}</b><span class="rarity">LOCKED</span></div></article>`).join("");
-}
-async function renderCards(account){
- const el=$("myCards");if(!el)return;
  const ids=account?await ownedCardIds(account):[];
+ const specialCards=CARD_SET.filter(c=>c.rank==="SR"||c.rank==="SSR");
  const palettes={SHOTARO:['#f7a3c5','#ffe2ef','#ffd5a7'],EUNSEOK:['#f4d75e','#fff4b8','#ffe7a8'],SUNGCHAN:['#72b7ff','#d7efff','#d8ddff'],WONBIN:['#a887f0','#eee1ff','#d7dfff'],SOHEE:['#e45b65','#ffd9dc','#ffe6cf'],ANTON:['#34c89a','#d8fff0','#d6f5e9']};
- const marks={SHOTARO:'♫',EUNSEOK:'✦',SUNGCHAN:'⬟',WONBIN:'★',SOHEE:'♡',ANTON:'⌘'};
- // SR cards belong to Period 2 only; do not show them in Period 1 collection.
- const visibleCards=CARD_SET.filter(c=>EVENT_SETTINGS.activePeriod===2 || c.rank!=="SR");
- el.innerHTML=visibleCards.map(c=>{
-  const owned=ids.includes(c.id);const [accent,bg1,bg2]=palettes[c.name]||['#a887f0','#eee1ff','#d7dfff'];
-  const skinClass=c.rank==='SR'?'project-x':c.skin==='COOL'?'cool':c.skin==='CUTE'?'cute':'character';
-  const mark=c.rank==='SR'?'✧':c.skin==='COOL'?'⚡':c.skin==='CUTE'?'♡':(marks[c.name]||'★');
-  const bgA=c.rank==='SR'?'#d6c3ff':c.skin==='COOL'?'#b9dfff':c.skin==='CUTE'?'#ffd5e9':bg1;
-  const bgB=c.rank==='SR'?'#fff0b7':c.skin==='COOL'?'#e7e2ff':c.skin==='CUTE'?'#fff0bb':bg2;
-  return `<article class="game-card ${owned?'owned':'missing'} ${skinClass}" style="--card-accent:${accent};--card-bg1:${bgA};--card-bg2:${bgB}">
-   <div class="art-stage"><div class="card-fallback"><span class="rank-label">RANK ${c.rank}</span><span class="character-mark">${mark}</span><strong class="placeholder-name">${c.name}</strong><span class="skin-label">${c.skin==='CHARACTER'?'CHARACTER CARD':c.skin==='PROJECT X'?'PROJECT X':c.skin+' SKIN'}</span></div>${owned?`<img src="${c.file}" alt="${c.name} ${c.rank} ${c.skin}" onerror="this.classList.add('img-failed')" loading="lazy">`:``}</div>
-   <div class="card-meta"><b>${c.name}</b><span class="rarity">${c.rank}</span></div>
+ const marks={SHOTARO:'♡',EUNSEOK:'♥',SUNGCHAN:'⚡',WONBIN:'💗',SOHEE:'♡',ANTON:'ϟ'};
+ el.innerHTML=specialCards.map(c=>{
+  const owned=ids.includes(c.id);const [accent,bg1,bg2]=palettes[c.name];
+  const mark=c.rank==='SSR'?'⚡':(marks[c.name]||'♡');
+  const bgA=c.rank==='SSR'?'#b9e7ff':bg1,bgB=c.rank==='SSR'?'#fff3a6':bg2;
+  return `<article class="game-card ${owned?'owned':'missing'} ${c.rank==='SSR'?'thunder-heart':'love-voltage'}" style="--card-accent:${accent};--card-bg1:${bgA};--card-bg2:${bgB}">
+   <div class="art-stage"><div class="card-fallback"><span class="rank-label">RANK ${c.rank}</span><span class="character-mark">${mark}</span><strong class="placeholder-name">${c.name}</strong><span class="skin-label">${c.skin}</span></div>${owned?`<img src="${c.file}" alt="${c.name} ${c.rank} ${c.skin}" onerror="this.classList.add('img-failed')" loading="lazy">`:``}</div>
+   <div class="card-meta"><span class="rarity">${owned?'COLLECTED':'LOCKED'}</span></div>
   </article>`;
  }).join('');
 }
-async function updatePublicStats(){try{let rows;if(DB_CONFIGURED)rows=await dbRequest("stamp_records?select=account,stamp_date");else{const d=JSON.parse(localStorage.getItem("we_vote_riize_stamps")||"{}");rows=Object.entries(d).flatMap(([account,dates])=>dates.map(stamp_date=>({account,stamp_date})))}const accounts=new Set(rows.map(r=>r.account));const today=kstDate();const countToday=rows.filter(r=>r.stamp_date===today).length;$("playerTotal").textContent=accounts.size;$("todayVotes").textContent=countToday;$("totalVotes").textContent=rows.length;const levels={};rows.forEach(r=>levels[r.account]=(levels[r.account]||0)+1);const top=Object.entries(levels).sort((a,b)=>b[1]-a[1])[0];if(top){$("completeCount").textContent=`LV. ${top[1]}`;$("completeHint").textContent="AGENT WITH THE HIGHEST LEVEL";$("completeList").innerHTML=`<div class="collector"><span class="collector-no">★</span><span>@${escapeHTML(top[0])}</span><span class="collector-badge">LV. ${top[1]}</span></div>`}else{$("completeCount").textContent="TOP LV. —";$ ("completeList").innerHTML='<div class="empty">ยังไม่มีผู้เล่นเช็กอิน</div>'}}catch(e){$("playerTotal").textContent="—";$("todayVotes").textContent="—";$("totalVotes").textContent="—"}}
 
-// ใส่ Project URL และ anon key จาก Supabase ของคุณก่อน deploy
+async function renderCards(account){
+ const el=$("myCards");if(!el)return;
+ const ids=account?await ownedCardIds(account):[];
+ 
+ let level=0;
+ if(account){
+  try{
+   const rec=await accountRecordFor(account);
+   const validDates=new Set(allEventDates());
+   level=new Set((rec.stamps||[]).filter(date=>validDates.has(date))).size;
+  }catch(e){ level=0; }
+ }
+ 
+ const fullyCompleted=Boolean(account) && level>=allEventDates().length;
+ const palettes={SHOTARO:['#f7a3c5','#ffe2ef','#ffd5a7'],EUNSEOK:['#f4d75e','#fff4b8','#ffe7a8'],SUNGCHAN:['#72b7ff','#d7efff','#d8ddff'],WONBIN:['#a887f0','#eee1ff','#d7dfff'],SOHEE:['#e45b65','#ffd9dc','#ffe6cf'],ANTON:['#34c89a','#d8fff0','#d6f5e9']};
+ const marks={SHOTARO:'♫',EUNSEOK:'✦',SUNGCHAN:'⬟',WONBIN:'★',SOHEE:'♡',ANTON:'⌘'};
+ const visibleCards=EVENT_SETTINGS.activePeriod===2 ? CARD_SET : CARD_SET.filter(c=>c.rank==="C"||c.rank==="R");
+ el.innerHTML=visibleCards.map(c=>{
+  const owned=ids.includes(c.id);const visuallyUnlocked=owned||fullyCompleted;const [accent,bg1,bg2]=palettes[c.name]||['#a887f0','#eee1ff','#d7dfff'];
+  const skinClass=c.rank==='SSR'?'thunder-heart':c.rank==='SR'?'love-voltage':c.skin==='COOL'?'cool':c.skin==='CUTE'?'cute':'character';
+  const mark=marks[c.name]||'★';
+  const bgA=c.rank==='SSR'?'#b9e7ff':c.rank==='SR'?'#ffd2e7':c.skin==='COOL'?'#b9dfff':c.skin==='CUTE'?'#ffd5e9':bg1;
+  const bgB=c.rank==='SSR'?'#fff3a6':c.rank==='SR'?'#fff0b7':c.skin==='COOL'?'#e7e2ff':c.skin==='CUTE'?'#fff0bb':bg2;
+  return `<article class="game-card ${visuallyUnlocked?'owned':'missing'} ${skinClass}" style="--card-accent:${accent};--card-bg1:${bgA};--card-bg2:${bgB}">
+   <div class="art-stage"><div class="card-fallback"><span class="rank-label">RANK ${c.rank}</span><span class="character-mark">${mark}</span><strong class="placeholder-name">${c.name}</strong><span class="skin-label">${c.skin==='CHARACTER'?'CHARACTER CARD':c.skin==='LOVE LAB'?'LOVE LAB':c.skin==='INSOMNIA'?'INSOMNIA':c.skin+' SKIN'}</span></div>${visuallyUnlocked?`<img src="${c.file}" alt="${c.name} ${c.rank} ${c.skin}" onerror="this.classList.add('img-failed')" loading="lazy">`:``}</div>
+   <div class="card-meta"><span class="rarity">${visuallyUnlocked?'COLLECTED':'LOCKED'}</span></div>
+  </article>`;
+ }).join('');
+}
+async function fetchAllStampRows(select="account,stamp_date", extraQuery=""){
+ const all=[];
+ const pageSize=1000;
+ for(let offset=0;;offset+=pageSize){
+  const query=`stamp_records?select=${encodeURIComponent(select)}${extraQuery}&limit=${pageSize}&offset=${offset}`;
+  const page=await dbRequest(query);
+  if(!Array.isArray(page)) throw new Error("รูปแบบข้อมูล stamp_records ไม่ถูกต้อง");
+  all.push(...page);
+  if(page.length<pageSize) break;
+ }
+ return all;
+}
+async function updatePublicStats(){try{let rows;if(DB_CONFIGURED)rows=await fetchAllStampRows("account,stamp_date");else{const d=JSON.parse(localStorage.getItem("we_vote_riize_stamps")||"{}");rows=Object.entries(d).flatMap(([account,dates])=>dates.map(stamp_date=>({account,stamp_date})))}const accounts=new Set(rows.map(r=>r.account));const today=kstDate();const countToday=rows.filter(r=>r.stamp_date===today).length;$("playerTotal").textContent=accounts.size;$("todayVotes").textContent=countToday;$("totalVotes").textContent=rows.length;}catch(e){console.error("Public stats load failed",e);$("playerTotal").textContent="—";$("todayVotes").textContent="—";$("totalVotes").textContent="—"}}
+
+// Project URL และ anon key จาก Supabase
 const SUPABASE_URL = "https://mpsecejxdmxlqrhqndmi.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_wCR6XbvdJCWa_5VvbFdjlQ_Pj6svmpz";
 const DB_CONFIGURED = !SUPABASE_URL.includes("YOUR-PROJECT") && !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
@@ -1646,30 +1791,41 @@ function currentEligibleDays() {
  return eventDates().filter(d=>d<=last);
 }
 async function loadCompleteAccounts() {
- const box=$("completeList"),eligible=currentEligibleDays(),total=eligible.length,cfg=activePeriodConfig();
- const today=kstDate(),last=eligible.length?eligible[eligible.length-1]:cfg.start;
- $("completeHint").textContent=total?`Player ที่เลเวลสูงสุดใน Period ${EVENT_SETTINGS.activePeriod} (${eventDateLabel(cfg.start)}–${eventDateLabel(last)})`:`รายชื่อผู้สะสมครบจะเริ่มแสดงเมื่อถึง ${eventDateLabel(cfg.start)}`;
- if(!total){paintCompleteAccounts([],total);return}
- if(!DB_CONFIGURED){const local=JSON.parse(localStorage.getItem("we_vote_riize_stamps")||"{}");const complete=Object.entries(local).filter(([_,dates])=>eligible.every(date=>new Set(dates).has(date))).map(([account])=>account);paintCompleteAccounts(complete,total);return}
- try{const rows=await dbRequest("stamp_records?select=account,stamp_date&order=account.asc");const map={};rows.forEach(r=>{map[r.account]=map[r.account]||new Set();map[r.account].add(r.stamp_date)});const complete=Object.entries(map).filter(([_,dates])=>eligible.every(date=>dates.has(date))).map(([account])=>account);paintCompleteAccounts(complete,total)}catch(e){box.innerHTML='<div class="empty">โหลดรายชื่อไม่สำเร็จ กรุณาตรวจการตั้งค่าฐานข้อมูล</div>';$("completeCount").textContent="— COMPLETE"}
+ const box=$("completeList");
+ try {
+  const map={};
+  if(!DB_CONFIGURED){
+   const local=JSON.parse(localStorage.getItem("we_vote_riize_stamps")||"{}");
+   Object.entries(local).forEach(([account,dates])=>{map[account]=new Set(dates)});
+  } else {
+   const rows=await fetchAllStampRows("account,stamp_date", "&order=account.asc");
+   rows.forEach(r=>{map[r.account]=map[r.account]||new Set();map[r.account].add(r.stamp_date)});
+  }
+  const accounts=Object.entries(map).map(([account,dates])=>({account,level:dates.size}));
+  const highestLevel=accounts.length?Math.max(...accounts.map(item=>item.level)):0;
+  paintCompleteAccounts(accounts.filter(item=>item.level===highestLevel),highestLevel);
+ } catch(e) {
+  box.innerHTML='<div class="empty">โหลดรายชื่อไม่สำเร็จ กรุณาตรวจการตั้งค่าฐานข้อมูล</div>';
+  $("completeCount").textContent="TOP LV. —";
+ }
 }
-function paintCompleteAccounts(accounts, total = currentEligibleDays().length) {
-  $("completeCount").textContent=`${accounts.length} COMPLETE`;
+function paintCompleteAccounts(accounts,highestLevel) {
+  $("completeCount").textContent=accounts.length?`TOP LV. ${highestLevel}`:"TOP LV. —";
   $("completeList").innerHTML=accounts.length
-    ? accounts.map((a,i)=>`<div class="collector"><span class="collector-no">${i+1}</span><span>@${escapeHTML(a)}</span><span class="collector-badge">${total}/${total} 🧡</span></div>`).join("")
-    : '<div class="empty">ยังไม่มีผู้เล่นเข้าร่วม 🧡</div>';
+    ? accounts.sort((a,b)=>a.account.localeCompare(b.account)).map(item=>`<div class="collector"><span>@${escapeHTML(item.account)}</span><span class="collector-badge">LV. ${item.level}</span></div>`).join("")
+    : '<div class="empty">ยังไม่มีผู้เล่นเข้าร่วม</div>';
 }
 function escapeHTML(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function kstDate(date=new Date()){
   return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit"}).format(date);
 }
 function kstDayFromText(s){
-  // OCR timestamp is written in Thai-local time on the certificate, but interpreted as Korean time.
+  // KST
   const m=s.match(/(20\d{2})[.\-/]\s*(\d{1,2})[.\-/]\s*(\d{1,2})\s+(\d{1,2})[:.](\d{2})/);
   if(!m) return null;
   let [_,y,mo,d,h,mi]=m;
   y=+y;mo=+mo;d=+d;h=+h;mi=+mi;
-  // Certificate timestamp is Thailand time (UTC+7). Convert to KST by adding 2 hours.
+  // Convert to KST
   const converted = new Date(Date.UTC(y,mo-1,d,h,mi) + 2*60*60*1000);
   return {date:converted.toISOString().slice(0,10),year:converted.getUTCFullYear(),month:converted.getUTCMonth()+1,day:converted.getUTCDate(),hour:converted.getUTCHours(),minute:converted.getUTCMinutes()};
 }
@@ -1680,7 +1836,7 @@ function accountRecord(){const db=readDB();return db[currentAccount]||{stamps:[]
 function showStatus(id,msg,type="info"){const el=$(id);el.textContent=msg;el.className="status show "+type}
 function hideStatus(id){$(id).className="status"}
 function setupDates(){
- const dates=eventDates();
+ const dates=allEventDates();
  $("chosenDate").innerHTML=dates.map(d=>`<option value="${d}">${eventDateLabel(d)}</option>`).join("");
  $("backdate").addEventListener("change",()=> $("dateField").classList.toggle("hidden",!$("backdate").checked));
  const cfg=activePeriodConfig();
@@ -1689,24 +1845,33 @@ function setupDates(){
 async function render(){
  let rec={stamps:[]};if(currentAccount){try{rec=await accountRecordFor(currentAccount)}catch(e){showStatus("accountStatus","เชื่อมต่อฐานข้อมูลไม่สำเร็จ กรุณาตรวจการตั้งค่า Supabase","err")}}
  const earned=new Set(rec.stamps||[]),level=earned.size,cfg=activePeriodConfig();
- $("count").textContent=`LV. ${level} / ${eventDates().length}`;$("levelChip").textContent=`LV. ${level}`;
+ $("count").textContent=`LV. ${level} / ${allEventDates().length}`;$("levelChip").textContent=`LV. ${level}`;
  const headers=["SUN","MON","TUE","WED","THU","FRI","SAT"];
- // Show only the two calendar weeks that overlap the active period.
- const startMs=Date.parse(cfg.start+"T00:00:00Z"),endMs=Date.parse(cfg.end+"T00:00:00Z");
- const firstDate=new Date(startMs),firstWeekStart=startMs-firstDate.getUTCDay()*86400000;
- const weekCount=Math.min(2,Math.ceil(((endMs-firstWeekStart)/86400000+1)/7));
- const monthName = (iso) => new Date(iso + "T00:00:00Z").toLocaleString("en-US", { month: "long", timeZone: "UTC" });
- const startMonth=monthName(cfg.start),endMonth=monthName(cfg.end);
- const monthTitle=startMonth===endMonth?startMonth:`${startMonth} / ${endMonth}`;
- let calendarHTML=`<div class="cal-month-title">${monthTitle}</div>`+headers.map(d=>`<div class="cal-head">${d}</div>`).join("");
- for(let i=0;i<weekCount*7;i++){
-   const t=firstWeekStart+i*86400000,date=new Date(t),iso=date.toISOString().slice(0,10),day=date.getUTCDate(),valid=isActivePeriodDate(iso),got=valid&&earned.has(iso);
-   calendarHTML+=valid?`<div class="cal-day ${got?"earned":""}"><span class="day-num">${day}</span><span class="day-status">${got?"✓ CHECKED":"LOCKED"}</span></div>`:`<div class="cal-day empty-day"><span class="day-num"></span><span class="day-status"></span></div>`;
+ 
+ const calendarDates=allEventDates();
+ const makeDates=(start,end)=>{const out=[];for(let t=Date.parse(start+"T00:00:00Z");t<=Date.parse(end+"T00:00:00Z");t+=86400000)out.push(new Date(t).toISOString().slice(0,10));return out;};
+ const period1Dates=makeDates(EVENT_SETTINGS.periods[1].start,EVENT_SETTINGS.periods[1].end);
+ const period2Dates=makeDates(EVENT_SETTINGS.periods[2].start,EVENT_SETTINGS.periods[2].end);
+ function monthCalendar(year,month,title){
+   const firstMs=Date.UTC(year,month-1,1),daysInMonth=new Date(Date.UTC(year,month,0)).getUTCDate();
+   const offset=new Date(firstMs).getUTCDay();
+   let html=`<div class="cal-month-title">${title}</div>`+headers.map(d=>`<div class="cal-head">${d}</div>`).join("");
+   for(let day=1;day<=daysInMonth;day++){
+     const iso=isoDate(year,month,day),valid=calendarDates.includes(iso);
+     if(!valid) continue; 
+     const got=earned.has(iso),period=period1Dates.includes(iso)?1:2;
+     const weekday=new Date(Date.UTC(year,month-1,day)).getUTCDay();
+     const weekRow=Math.floor((offset+day-1)/7)+3; 
+     const status=got?"✓ CHECKED":(iso<=cfg.end?"LOCKED":"UPCOMING");
+     html+=`<div class="cal-day period-${period} ${got?"earned":""}" style="grid-column:${weekday+1};grid-row:${weekRow}"><span class="day-num">${day}</span><span class="day-status">${status}</span></div>`;
+   }
+   return `<div class="calendar-month">${html}</div>`;
  }
- $("stampGrid").innerHTML=calendarHTML;
- const heading=document.querySelector('#myCards')?.previousElementSibling;if(heading)heading.innerHTML=`CARD COLLECTION <span class="hint" style="font-size:12px">· PERIOD ${String(EVENT_SETTINGS.activePeriod).padStart(2,"0")} · ${EVENT_SETTINGS.activePeriod===2?'UNOWNED + SR':'C + R'}</span>`;
- const p2heading=$("lockedCards")?.previousElementSibling;if(p2heading)p2heading.textContent=EVENT_SETTINGS.activePeriod===2?"PERIOD 02 · ACTIVE · SR + UNOWNED CARDS":"PERIOD 02 · SR CARDS · LOCKED";
- await renderCards(currentAccount);renderLockedCards();
+ $("stampGrid").innerHTML=monthCalendar(2026,10,"OCTOBER 2026")+monthCalendar(2026,11,"NOVEMBER 2026");
+ const heading=document.querySelector('#myCards')?.previousElementSibling;
+ if(heading)heading.innerHTML=`<span class="collection-title">CARD COLLECTION</span><span class="collection-period">· PERIOD ${String(EVENT_SETTINGS.activePeriod).padStart(2,"0")} · ${EVENT_SETTINGS.activePeriod===2?'ALL CARDS':'C + R'}</span>`;
+ const lockedGrid=$("lockedCards");if(lockedGrid){lockedGrid.hidden=true;lockedGrid.style.setProperty("display","none","important");}
+ await renderCards(currentAccount);
 }
 
 $("loadBtn").addEventListener("click",async()=>{
@@ -1731,36 +1896,46 @@ $("stampBtn").addEventListener("click",async()=>{
   if(!file.type.startsWith("image/")){showStatus("uploadStatus","ไฟล์นี้ไม่ใช่รูปภาพ","err");return}
   const btn=$("stampBtn");btn.disabled=true;btn.textContent="กำลังตรวจสอบ…";
   try{
-    // Decode only in memory. No uploaded proof is written to localStorage or sent to a server.
     const img=await loadImage(file);
     showStatus("uploadStatus","กำลังตรวจสอบภาพ…","info");
-    const photoResult = await checkTargetPhotoFast(img);
-    if(photoResult === "uncertain"){
-      const confirmPhoto = window.confirm("ระบบตรวจภาพได้ไม่ชัดเจน\n\nกรุณายืนยันว่าได้โหวต RIIZE ในหมวด FAN’S CHOICE MALE เรียบร้อยแล้ว \n\nกด OK เพื่อดำเนินการต่อ หรือ Cancel เพื่อหยุด");
-      if(!confirmPhoto){
-        showStatus("uploadStatus","ไม่สามารถตรวจสอบได้ กรุณาเลือกภาพ Certificate ที่เห็นชัดเจน","err");
-        return;
-      }
-    } else if(!photoResult){
-      const confirmPhoto = window.confirm("ระบบตรวจภาพได้ไม่ชัดเจน\n\nกรุณายืนยันว่าได้โหวต RIIZE ในหมวด FAN’S CHOICE MALE เรียบร้อยแล้ว \n\nกด OK เพื่อดำเนินการต่อ หรือ Cancel เพื่อหยุด");
-      if(!confirmPhoto){
-        showStatus("uploadStatus","ยกเลิกแล้ว กรุณาเลือกภาพ Certificate ที่เห็นชัดเจน","err");
-        return;
-      }
+    let photoResult = "uncertain";
+    try { photoResult = await checkTargetPhotoFast(img); }
+    catch (photoErr) { console.warn("Photo matching unavailable; continue with user confirmation", photoErr); }
+    const confirmMessage = photoResult === true
+      ? "ตรวจพบภาพที่ตรงกับ Certificate\n\nยืนยันว่าเป็น Voting Certificate หลังโหวต RIIZE ในหมวด FAN’S CHOICE MALE แล้วใช่ไหม?\n\nกด OK เพื่ออ่านวันที่ หรือ Cancel เพื่อหยุด"
+      : "ระบบเทียบรูปอัตโนมัติไม่ได้ (รองรับภาพแคปหน้าจอแบบใหม่ด้วย)\n\nโปรดตรวจว่าภาพเป็น Voting Certificate จริง และยืนยันว่าได้โหวต RIIZE ในหมวด FAN’S CHOICE MALE แล้ว\n\nกด OK เพื่ออ่านวันที่ หรือ Cancel เพื่อหยุด";
+    const confirmPhoto = window.confirm(confirmMessage);
+    if(!confirmPhoto){
+      showStatus("uploadStatus","ยกเลิกแล้ว คุณสามารถเลือกภาพ Certificate แล้วลองใหม่ได้","err");
+      return;
     }
     showStatus("uploadStatus","ตรวจสอบแล้ว กำลังอ่านข้อความวันที่บนใบรับรอง…","info");
     let ocrText="";
     if(window.Tesseract){
-      ocrText = await readCertificateDateText(img);
+      try { ocrText = await readCertificateDateText(img); }
+      catch (ocrErr) { console.warn("OCR failed; use manual date confirmation", ocrErr); }
     } else {
-      showStatus("uploadStatus","โหลดไม่สำเร็จ กรุณาลองใหม่","err");return;
+      console.warn("Tesseract is unavailable; use manual date confirmation");
     }
-    const parsed=kstDayFromText(ocrText);
-    if(!parsed){showStatus("uploadStatus","อ่านวันที่/เวลาใต้ใบรับรองไม่สำเร็จ กรุณาใช้ภาพชัด ๆ ที่เห็นรูปแบบวันที่ เช่น 2026.10.16 22:01","err");return}
+    let parsed=kstDayFromText(ocrText);
+    if(!parsed){
+      const manualDate = window.prompt(
+        "ระบบอ่านข้อความวันที่บน Certificate ไม่ชัดเจน\n\nกรุณาตรวจวันที่บนภาพ แล้วกรอกวันที่ที่แสดงใน Certificate รูปแบบ YYYY-MM-DD\nตัวอย่าง: 2026-10-28\n\nระบบจะยังตรวจช่วงวันที่กิจกรรมและป้องกันการรับการ์ดซ้ำเหมือนเดิม"
+      );
+      if(!manualDate){showStatus("uploadStatus","ยกเลิกแล้ว กรุณาลองอัปโหลดภาพใหม่ หรือยืนยันวันที่อีกครั้ง","err");return;}
+      const dm=manualDate.trim().match(/^(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})$/);
+      if(!dm){showStatus("uploadStatus","รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกเป็น YYYY-MM-DD เช่น 2026-10-28","err");return;}
+      const yy=Number(dm[1]), mm=Number(dm[2]), dd=Number(dm[3]);
+      const checkDate=new Date(Date.UTC(yy,mm-1,dd));
+      if(checkDate.getUTCFullYear()!==yy||checkDate.getUTCMonth()!==mm-1||checkDate.getUTCDate()!==dd){showStatus("uploadStatus","วันที่ที่กรอกไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง","err");return;}
+      const confirmManual=window.confirm(`ระบบอ่านวันที่จากภาพไม่ได้\n\nคุณยืนยันว่าบน Voting Certificate แสดงวันที่ ${String(dd).padStart(2,"0")}/${String(mm).padStart(2,"0")}/${yy} และคุณโหวต RIIZE ในหมวด FAN’S CHOICE MALE แล้วใช่ไหม?\n\nกด OK เพื่อยืนยันวันที่ หรือ Cancel เพื่อหยุด`);
+      if(!confirmManual){showStatus("uploadStatus","ยกเลิกการยืนยันวันที่แล้ว","err");return;}
+      parsed={year:yy,month:mm,day:dd};
+    }
     const targetDate=isoDate(parsed.year,parsed.month,parsed.day);
-    if(!isActivePeriodDate(targetDate)){
+    if(!allEventDates().includes(targetDate)){
       const cfg=activePeriodConfig();
-      showStatus("uploadStatus",`วันที่ตามเวลาเกาหลีคือ ${eventDateLabel(targetDate)} อยู่นอกช่วง Period ${EVENT_SETTINGS.activePeriod} (${eventDateLabel(cfg.start)}–${eventDateLabel(cfg.end)})`,"err");return;
+      showStatus("uploadStatus",`วันที่ตามเวลาเกาหลีคือ ${eventDateLabel(targetDate)} อยู่นอกช่วงกิจกรรมทั้งสอง Period (${eventDateLabel(cfg.start)}–${eventDateLabel(cfg.end)})`,"err");return;
     }
     const backdate=$("backdate").checked;
     const chosen=backdate?$("chosenDate").value:targetDate;
@@ -1791,9 +1966,7 @@ $("stampBtn").addEventListener("click",async()=>{
     $("proof").value="";
   }catch(err){
     console.error(err);
-    showStatus("uploadStatus",err.message==="โหลดระบบตรวจภาพไม่สำเร็จ กรุณาลองใหม่"
-      ? err.message
-      : "ตรวจสอบรูปไม่สำเร็จ กรุณาลองอีกครั้ง","err");
+    showStatus("uploadStatus",`เกิดข้อผิดพลาด: ${err && err.message ? err.message : "ตรวจสอบรูปไม่สำเร็จ กรุณาลองอีกครั้ง"}`,"err");
   }finally{btn.disabled=false;btn.textContent="ตรวจสอบและรับการ์ด";}
 });
 function loadImage(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file);const img=new Image();img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("image load failed"))};img.src=url})}
@@ -1810,7 +1983,7 @@ async function readCertificateDateText(img){
     const canvas=document.createElement("canvas");
     const sx=Math.round(img.naturalWidth*rx), sy=Math.round(img.naturalHeight*ry);
     const sw=Math.max(1,Math.round(img.naturalWidth*rw)), sh=Math.max(1,Math.round(img.naturalHeight*rh));
-   //zoom for checking date
+   
     const scale=(rx===0&&ry===0&&rw===1&&rh===1)?1:Math.min(3,Math.max(1.5,1400/Math.max(sw,sh)));
     canvas.width=Math.round(sw*scale); canvas.height=Math.round(sh*scale);
     const ctx=canvas.getContext("2d");
@@ -1820,7 +1993,7 @@ async function readCertificateDateText(img){
       const result=await Tesseract.recognize(canvas,"eng",{logger:()=>{}});
       const text=result.data.text||""; texts.push(text);
       if(kstDayFromText(text)) return text;
-    }catch(e){ /* try other crop regions */ }
+    }catch(e){  }
   }
   return texts.join("\n");
 }
@@ -1886,62 +2059,147 @@ async function checkTargetPhotoFast(uploadedImage) {
   return false;
 }
 
-async function downloadCertificate() {
-  if (!currentAccount) {
-    showStatus("accountStatus", "กรุณากรอกแอคแล้วกดดูคอลเลกชันก่อนดาวน์โหลด", "err");
-    return;
+async function downloadCertificate(requestedPeriod=EVENT_SETTINGS.activePeriod) {
+ 
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  let iosTab = null;
+  if (isIOS) {
+    try { iosTab = window.open("about:blank", "_blank"); } catch (_) {}
   }
   try {
+    if (!currentAccount) throw new Error("กรุณากรอกแอคแล้วกดดูคอลเลกชันก่อนดาวน์โหลด");
+    const periodNo = Number(requestedPeriod);
+    const cfg = EVENT_SETTINGS.periods[periodNo];
+    if (!cfg) throw new Error("ไม่พบวันที่ใน Event Settings");
+    showStatus("accountStatus", "กำลังสร้าง Card Collection…", "info");
     const rec = await accountRecordFor(currentAccount);
     const earned = new Set(rec.stamps || []);
     const records = await ownedCardRecords(currentAccount);
     const cardById = new Map(CARD_SET.map(c => [c.id, c]));
-    const cardRows = records.map(r => ({...r, card:cardById.get(r.card_id)})).filter(r => r.card && r.card.rank !== "SP");
+    const cardRows = records
+      .filter(r => recordPeriod(r) === periodNo)
+      .map(r => ({...r, card:cardById.get(r.card_id)}))
+      .filter(r => r.card && r.card.rank !== "SP")
+      .sort((a,b) => String(a.created_at || "").localeCompare(String(b.created_at || "")));
+
+    const stampedDates = [...new Set((rec.stamps || []).filter(d => d >= cfg.start && d <= cfg.end))].sort();
+    const legacyRows = cardRows.filter(r => !/^\d{4}-\d{2}-\d{2}$/.test(String(r.acquired_date || "")));
+    const fallbackDates = stampedDates.slice(Math.max(0, stampedDates.length - legacyRows.length));
+    legacyRows.forEach((r, i) => { r._stampDateFallback = fallbackDates[i] || null; });
+
     const loaded = {};
     await Promise.all(cardRows.map(async r => {
       try {
         const img = new Image();
-        await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=r.card.file;if(img.complete&&img.naturalWidth)resolve()});
+        img.crossOrigin = "anonymous";
+        await new Promise((resolve,reject)=>{
+          img.onload=resolve;
+          img.onerror=()=>reject(new Error("โหลดรูปการ์ดไม่สำเร็จ: "+r.card.file));
+          img.src = new URL(r.card.file, document.baseURI).href;
+          if (img.complete && img.naturalWidth) resolve();
+        });
         loaded[r.card.id]=img;
       } catch(e) { console.warn("โหลดรูปการ์ดไม่สำเร็จ:",r.card.file,e); }
     }));
 
-    const canvas=document.createElement("canvas"); canvas.width=1200; canvas.height=1500;
-    const ctx=canvas.getContext("2d"); if(!ctx) throw new Error("ไม่สามารถสร้าง Canvas ได้");
-    const bg=ctx.createLinearGradient(0,0,1200,1500); bg.addColorStop(0,"#fff7d6");bg.addColorStop(.5,"#d9f1ff");bg.addColorStop(1,"#e4ffd9");ctx.fillStyle=bg;ctx.fillRect(0,0,1200,1500);
-    // Mario-inspired arcade frame
-    ctx.fillStyle="#e63946";ctx.beginPath();ctx.roundRect(24,24,1152,1452,34);ctx.fill();
-    ctx.fillStyle="#ffdf4d";ctx.beginPath();ctx.roundRect(42,42,1116,1416,26);ctx.fill();
-    ctx.fillStyle="#fffdf4";ctx.beginPath();ctx.roundRect(58,58,1084,1384,20);ctx.fill();
-    ctx.textAlign="center";ctx.fillStyle="#e63946";ctx.font="900 30px system-ui";ctx.fillText("★ WE VOTE RIIZE · DAILY CARD COLLECTION ★",600,112);
-    ctx.fillStyle="#164e9a";ctx.font="900 48px system-ui";ctx.fillText("2026 MAMA FAN’S CHOICE",600,172);
-    ctx.fillStyle="#fff1a8";ctx.beginPath();ctx.roundRect(250,194,700,68,22);ctx.fill();ctx.strokeStyle="#164e9a";ctx.lineWidth=4;ctx.stroke();
-    const accountName="@"+currentAccount;let fs=38;ctx.font=`900 ${fs}px system-ui`;while(ctx.measureText(accountName).width>640&&fs>20){fs-=2;ctx.font=`900 ${fs}px system-ui`};ctx.fillStyle="#164e9a";ctx.fillText(accountName,600,239);
-    ctx.fillStyle="#333";ctx.font="bold 23px system-ui";ctx.fillText(`LV. ${earned.size}/${DAYS.length}  ·  ${cardRows.length} CARDS COLLECTED`,600,305);
-    // List each card with the day it was awarded. Cards from before date tracking are marked as date unknown.
-    const displayRows=[...cardRows].sort((a,b)=>(a.created_at||"9999").localeCompare(b.created_at||"9999"));
-    const cols=6, cardW=155, cardH=250, gapX=20, gapY=18, gridW=cols*cardW+(cols-1)*gapX, startX=(1200-gridW)/2, startY=340;
-    displayRows.slice(0,24).forEach((r,i)=>{
-      const col=i%cols,row=Math.floor(i/cols),x=startX+col*(cardW+gapX),y=startY+row*(cardH+gapY);
-      ctx.fillStyle="#164e9a";ctx.beginPath();ctx.roundRect(x-4,y-4,cardW+8,cardH+8,12);ctx.fill();
-      ctx.fillStyle="#fff";ctx.beginPath();ctx.roundRect(x,y,cardW,cardH,9);ctx.fill();
-      const img=loaded[r.card.id];
-      if(img){const pad=5, maxW=cardW-2*pad,maxH=cardH-34,scale=Math.min(maxW/img.naturalWidth,maxH/img.naturalHeight),w=img.naturalWidth*scale,h=img.naturalHeight*scale;ctx.drawImage(img,x+(cardW-w)/2,y+5,w,h)}
-      else {ctx.fillStyle="#dbeafe";ctx.fillRect(x+5,y+5,cardW-10,cardH-40);ctx.fillStyle="#164e9a";ctx.font="bold 18px system-ui";ctx.fillText(r.card.name,x+cardW/2,y+cardH/2)}
-      ctx.fillStyle="#ffdf4d";ctx.fillRect(x+4,y+cardH-31,cardW-8,26);
-      ctx.fillStyle="#17324d";ctx.font="bold 15px system-ui";ctx.fillText(r.period?`${r.period.toUpperCase()} · ${r.card.rank}`:`${r.card.rank} · CARD`,x+cardW/2,y+cardH-13);
+    const allDates = [];
+    for(let t=Date.parse(cfg.start+'T00:00:00Z'); t<=Date.parse(cfg.end+'T00:00:00Z'); t+=86400000){
+      allDates.push({date:new Date(t).toISOString().slice(0,10),cards:[]});
+    }
+    const byDate = new Map();
+    cardRows.forEach(r=>{
+    const date = r.acquired_date || r._stampDateFallback || (r.created_at ? kstDate(new Date(r.created_at)) : null);
+      if(!date || date < cfg.start || date > cfg.end) return;
+      if(!byDate.has(date)) byDate.set(date,[]);
+      byDate.get(date).push(r);
     });
-    if(!displayRows.length){ctx.fillStyle="#555";ctx.font="bold 26px system-ui";ctx.fillText("ยังไม่มีการ์ดที่ได้รับ",600,650)}
-    ctx.fillStyle="#164e9a";ctx.font="bold 18px system-ui";ctx.fillText("DAILY REWARDS · COLLECT THEM ALL!",600,1410);
-    const link=document.createElement("a");link.download=`we-vote-riize-card-collection-${currentAccount}.png`;link.href=canvas.toDataURL("image/png");document.body.appendChild(link);link.click();link.remove();
+    allDates.forEach(d=>{d.cards=(byDate.get(d.date)||[]).slice(0,1);});
+    const datedRows=cardRows.filter(r=>{
+      const date = r.acquired_date || r._stampDateFallback || (r.created_at ? kstDate(new Date(r.created_at)) : null);
+      return !date || date < cfg.start || date > cfg.end;
+    });
+
+    const cols=3, tileW=330, tileH=270, gapX=18, gapY=14, rows=Math.ceil(allDates.length/cols);
+    const logicalWidth=1200, logicalHeight=340+rows*(tileH+gapY)+55;
+    const renderScale=3;
+    const canvas=document.createElement("canvas");
+    
+    canvas.width=logicalWidth*renderScale;
+    canvas.height=logicalHeight*renderScale;
+    const ctx=canvas.getContext("2d");
+    if(!ctx) throw new Error("เบราว์เซอร์ไม่รองรับการสร้างรูป กรุณาลองใช้ Safari หรือ Chrome เวอร์ชันล่าสุด");
+    ctx.scale(renderScale,renderScale);
+    ctx.imageSmoothingEnabled=true;
+    ctx.imageSmoothingQuality="high";
+    
+    // border for card collection
+    const palette = periodNo === 2
+      ? { page:"#eaf7ff", outer:"#62b8ff", middle:"#ffb6d9", title:"#24527a", tile:"#62b8ff", tileAlt:"#ff8fc4", dateBg:"#eaf7ff", dateBorder:"#ff8fc4", dateText:"#24527a" }
+      : { page:"#dff7f4", outer:"#ef3340", middle:"#ffdf4d", title:"#e63946", tile:"#164e9a", tileAlt:"#164e9a", dateBg:"#fff1a8", dateBorder:"#164e9a", dateText:"#164e9a" };
+    ctx.fillStyle=palette.page;ctx.fillRect(0,0,logicalWidth,logicalHeight);
+    ctx.fillStyle=palette.outer;ctx.beginPath();ctx.roundRect(24,24,1152,logicalHeight-48,30);ctx.fill();
+    ctx.fillStyle=palette.middle;ctx.beginPath();ctx.roundRect(42,42,1116,logicalHeight-84,24);ctx.fill();
+    ctx.fillStyle="#fffdf4";ctx.beginPath();ctx.roundRect(58,58,1084,logicalHeight-116,20);ctx.fill();
+    ctx.textAlign="center";ctx.fillStyle=palette.title;ctx.font="900 28px system-ui";ctx.fillText("★ WE VOTE RIIZE · CARD COLLECTION ★",600,105);
+    ctx.fillStyle=palette.title;ctx.font="900 44px system-ui";ctx.fillText("2026 MAMA FAN’S CHOICE",600,160);
+    const [sy,sm,sd]=cfg.start.split("-"); const [ey,em,ed]=cfg.end.split("-");
+    const dateRange=`${sd}/${sm}/${sy} – ${ed}/${em}/${ey}`;
+    ctx.fillStyle=palette.dateBg;ctx.beginPath();ctx.roundRect(250,180,700,58,18);ctx.fill();ctx.strokeStyle=palette.dateBorder;ctx.lineWidth=4;ctx.stroke();
+    ctx.fillStyle=palette.dateText;ctx.font="900 24px system-ui";ctx.fillText(`ROUND ${periodNo}  ·  ${dateRange}`,600,218);
+    const accountName="@"+currentAccount;let fs=34;ctx.font=`900 ${fs}px system-ui`;while(ctx.measureText(accountName).width>640&&fs>20){fs-=2;ctx.font=`900 ${fs}px system-ui`};ctx.fillStyle="#164e9a";ctx.fillText(accountName,600,274);
+    const periodStampCount=stampedDates.length;
+    ctx.fillStyle="#333";ctx.font="bold 20px system-ui";ctx.fillText(`LV. ${periodStampCount}/${allPeriodDatesCount(cfg)} · ${cardRows.length} CARDS COLLECTED`,600,310);
+    const startX=(1200-(cols*tileW+(cols-1)*gapX))/2, startY=330;
+    allDates.forEach((slot,i)=>{
+      const col=i%cols,row=Math.floor(i/cols),x=startX+col*(tileW+gapX),y=startY+row*(tileH+gapY);
+      ctx.fillStyle=periodNo===2?(i%2===0?palette.tile:palette.tileAlt):palette.tile;ctx.beginPath();ctx.roundRect(x,y,tileW,tileH,13);ctx.fill();
+      ctx.fillStyle="#fffdf4";ctx.beginPath();ctx.roundRect(x+5,y+5,tileW-10,tileH-10,10);ctx.fill();
+      const [yy,mm,dd]=slot.date.split('-');
+      ctx.textAlign="left";ctx.fillStyle="#164e9a";ctx.font="900 19px system-ui";ctx.fillText(`${dd}/${mm}/${yy}`,x+14,y+31);
+      const dayCards=slot.cards||[];
+      if(dayCards.length){
+        const maxCards=1, cardW=190, cardH=190, startCardX=x+(tileW-cardW)/2;
+        dayCards.slice(0,1).forEach((r,j)=>{
+          const cx=startCardX+j*(cardW+12),cy=y+40,img=loaded[r.card.id];
+          ctx.fillStyle="#fffdf4";ctx.beginPath();ctx.roundRect(cx-4,cy-4,cardW+8,cardH+8,9);ctx.fill();
+          if(img){const scale=Math.min(cardW/img.naturalWidth,cardH/img.naturalHeight),w=img.naturalWidth*scale,h=img.naturalHeight*scale;ctx.drawImage(img,cx+(cardW-w)/2,cy+(cardH-h)/2,w,h)}
+          else {ctx.fillStyle="#dbeafe";ctx.fillRect(cx,cy,cardW,cardH);ctx.fillStyle="#164e9a";ctx.font="bold 12px system-ui";ctx.textAlign="center";ctx.fillText(r.card.name,cx+cardW/2,cy+cardH/2)}
+        });
+        ctx.textAlign="center";ctx.fillStyle="#17324d";ctx.font="bold 13px system-ui";ctx.fillText(`${dayCards[0].card.name} · ${dayCards[0].card.rank}`,x+tileW/2,y+247);
+      } else {
+        ctx.textAlign="center";ctx.fillStyle="#cbd5e1";ctx.beginPath();ctx.roundRect(x+113,y+66,104,104,10);ctx.fill();
+        ctx.fillStyle="#64748b";ctx.font="900 35px system-ui";ctx.fillText("＋",x+tileW/2,y+113);
+        ctx.font="bold 13px system-ui";ctx.fillText("NOT FOUND",x+tileW/2,y+145);
+        ctx.fillStyle="#94a3b8";ctx.font="bold 12px system-ui";ctx.fillText("NO CARD YET",x+tileW/2,y+247);
+      }
+    });
+
+    if(datedRows.length){console.warn(`${datedRows.length} card(s) have no matching date in this event period.`)}
+
+    const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("ไม่สามารถสร้างไฟล์ PNG ได้")),"image/png"));
+    const fileName=`we-vote-riize-card-collection-${currentAccount}-${cfg.start}-to-${cfg.end}.png`;
+    const url=URL.createObjectURL(blob);
+    if (isIOS && iosTab && !iosTab.closed) {
+      iosTab.location.href=url;
+      showStatus("accountStatus","Card Collection เรียบร้อยแล้ว เปิดรูปในแท็บใหม่เพื่อบันทึกหรือดาวน์โหลดไฟล์", "info");
+      setTimeout(()=>URL.revokeObjectURL(url), 10*60*1000);
+    } else {
+      if (iosTab && !iosTab.closed) iosTab.close();
+      const link=document.createElement("a");
+      link.href=url; link.download=fileName; link.style.display="none";
+      document.body.appendChild(link); link.click(); link.remove();
+      showStatus("accountStatus","Card Collection เรียบร้อยแล้ว หากไม่เริ่มดาวน์โหลด ให้ตรวจการบล็อกดาวน์โหลดของเบราว์เซอร์", "info");
+      setTimeout(()=>URL.revokeObjectURL(url), 10*60*1000);
+    }
   } catch(error) {
+    if (iosTab && !iosTab.closed) iosTab.close();
     console.error("Card collection download error:",error);
-    showStatus("accountStatus","ดาวน์โหลดการ์ดสะสมไม่สำเร็จ กรุณาลองอีกครั้ง","err");
+    showStatus("accountStatus",`สร้าง Card Collection ไม่สำเร็จ: ${error.message || error}`,"err");
   }
 }
-
-$("downloadBtn").addEventListener("click",downloadCertificate);
-$("clearInputBtn").addEventListener("click",()=>{$("proof").value="";hideStatus("uploadStatus")});
+$("downloadPeriod1Btn").addEventListener("click",()=>downloadCertificate(1));
+$("downloadPeriod2Btn").addEventListener("click",()=>downloadCertificate(2));
 setupDates();
 if(!DB_CONFIGURED) {
   showStatus("accountStatus","ยังไม่ได้เชื่อมต่อฐานข้อมูลกลาง จะแสดงข้อมูลเฉพาะเบราว์เซอร์นี้จนกว่าจะตั้งค่า Supabase","info");
@@ -1949,7 +2207,7 @@ if(!DB_CONFIGURED) {
 render();
 loadCompleteAccounts();
 updatePublicStats();
-renderLockedCards();
+renderLockedCards(currentAccount);
   </script>
  </body>
 </html>
