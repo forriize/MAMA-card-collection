@@ -1673,19 +1673,32 @@ async function drawCard(account,day){
  await saveOwnedCard(account,card.id,day);
  return card;
 }
+async function accountHasCompletedAllDays(account){
+ if(!account) return false;
+ try {
+  const rec=await accountRecordFor(account);
+  const validDates=new Set(allEventDates());
+  const stamped=new Set((rec.stamps||[]).map(value=>String(value).slice(0,10)).filter(date=>validDates.has(date)));
+  return stamped.size>=validDates.size;
+ } catch(error) {
+  console.error("Could not verify full event completion:",error);
+  return false;
+ }
+}
 async function renderLockedCards(account=currentAccount){
  const el=$("lockedCards");if(!el)return;
  const ids=account?await ownedCardIds(account):[];
+ const fullyCompleted=await accountHasCompletedAllDays(account);
  const specialCards=CARD_SET.filter(c=>c.rank==="SR"||c.rank==="SSR");
  const palettes={SHOTARO:['#f7a3c5','#ffe2ef','#ffd5a7'],EUNSEOK:['#f4d75e','#fff4b8','#ffe7a8'],SUNGCHAN:['#72b7ff','#d7efff','#d8ddff'],WONBIN:['#a887f0','#eee1ff','#d7dfff'],SOHEE:['#e45b65','#ffd9dc','#ffe6cf'],ANTON:['#34c89a','#d8fff0','#d6f5e9']};
  const marks={SHOTARO:'♡',EUNSEOK:'♥',SUNGCHAN:'⚡',WONBIN:'💗',SOHEE:'♡',ANTON:'ϟ'};
  el.innerHTML=specialCards.map(c=>{
-  const owned=ids.includes(c.id);const [accent,bg1,bg2]=palettes[c.name];
+  const owned=ids.includes(c.id);const visuallyUnlocked=owned||fullyCompleted;const [accent,bg1,bg2]=palettes[c.name];
   const mark=c.rank==='SSR'?'⚡':(marks[c.name]||'♡');
   const bgA=c.rank==='SSR'?'#b9e7ff':bg1,bgB=c.rank==='SSR'?'#fff3a6':bg2;
-  return `<article class="game-card ${owned?'owned':'missing'} ${c.rank==='SSR'?'thunder-heart':'love-voltage'}" style="--card-accent:${accent};--card-bg1:${bgA};--card-bg2:${bgB}">
-   <div class="art-stage"><div class="card-fallback"><span class="rank-label">RANK ${c.rank}</span><span class="character-mark">${mark}</span><strong class="placeholder-name">${c.name}</strong><span class="skin-label">${c.skin}</span></div>${owned?`<img src="${c.file}" alt="${c.name} ${c.rank} ${c.skin}" onerror="this.classList.add('img-failed')" loading="lazy">`:``}</div>
-   <div class="card-meta"><span class="rarity">${owned?'COLLECTED':'LOCKED'}</span></div>
+  return `<article class="game-card ${visuallyUnlocked?'owned':'missing'} ${c.rank==='SSR'?'thunder-heart':'love-voltage'}" style="--card-accent:${accent};--card-bg1:${bgA};--card-bg2:${bgB}">
+   <div class="art-stage"><div class="card-fallback"><span class="rank-label">RANK ${c.rank}</span><span class="character-mark">${mark}</span><strong class="placeholder-name">${c.name}</strong><span class="skin-label">${c.skin}</span></div>${visuallyUnlocked?`<img src="${c.file}" alt="${c.name} ${c.rank} ${c.skin}" onerror="this.classList.add('img-failed')" loading="lazy">`:``}</div>
+   <div class="card-meta"><span class="rarity">${visuallyUnlocked?'COLLECTED':'LOCKED'}</span></div>
   </article>`;
  }).join('');
 }
@@ -1699,8 +1712,8 @@ async function renderCards(account){
   try{
    const rec=await accountRecordFor(account);
    const validDates=new Set(allEventDates());
-   level=new Set((rec.stamps||[]).filter(date=>validDates.has(date))).size;
-  }catch(e){ level=0; }
+   level=new Set((rec.stamps||[]).map(value=>String(value).slice(0,10)).filter(date=>validDates.has(date))).size;
+  }catch(e){ console.error("Could not load account stamps:",e); level=0; }
  }
  
  const fullyCompleted=Boolean(account) && level>=allEventDates().length;
